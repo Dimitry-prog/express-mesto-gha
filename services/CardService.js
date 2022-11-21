@@ -11,7 +11,7 @@ class CardService {
     return cards;
   }
 
-  async removecard(id) {
+  async removeCard(id) {
     if (!id) {
       throw new Error('We cant find this card');
     }
@@ -20,27 +20,19 @@ class CardService {
   }
 
   async like(id, card) {
-    if (!card._id) {
+    if (!id) {
       throw new Error('We cant find this card');
     }
-    const like = await Card.findByIdAndUpdate(card._id, card, { new: true });
+    const like = await Card.findByIdAndUpdate(id, card, { new: true });
     return like;
   }
 
   async dislike(id, card) {
-    if (!card._id) {
-      throw new Error('We cant find this card');
-    }
-    const dislike = await Card.findByIdAndUpdate(card._id, card, { new: true });
-    return dislike;
-  }
-
-  async removeLike(id) {
     if (!id) {
       throw new Error('We cant find this card');
     }
-    const likes = await Card.findByIdAndDelete(id);
-    return likes;
+    const dislike = await Card.findByIdAndUpdate(id, card, { new: true });
+    return dislike;
   }
 }
 

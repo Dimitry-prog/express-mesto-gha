@@ -24,7 +24,8 @@ class CardController {
 
   async removeCard(req, res) {
     try {
-      const cards = await CardService.removecard(req.params.id);
+      console.log(req.params);
+      const cards = await CardService.removeCard(req.params.cardId);
       return res.json(cards);
     } catch (e) {
       console.log(e);
@@ -34,7 +35,7 @@ class CardController {
 
   async like(req, res) {
     try {
-      const like = await CardService.like(req.params.id, { $addToSet: { likes: req.user._id } });
+      const like = await CardService.like(req.params.cardId, { $addToSet: { likes: req.user._id } });
       return res.json(like);
     } catch (e) {
       console.log(e);
@@ -44,18 +45,8 @@ class CardController {
 
   async dislike(req, res) {
     try {
-      const dislike = await CardService.like(req.params.id, { $pull: { likes: req.user._id } });
+      const dislike = await CardService.dislike(req.params.cardId, { $pull: { likes: req.user._id } });
       return res.json(dislike);
-    } catch (e) {
-      console.log(e);
-      res.status(500).json(e);
-    }
-  }
-
-  async removeLike(req, res) {
-    try {
-      const likes = await CardService.removeLike(req.params.id);
-      return res.json(likes);
     } catch (e) {
       console.log(e);
       res.status(500).json(e);
