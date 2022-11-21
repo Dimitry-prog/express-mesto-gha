@@ -10,7 +10,7 @@ class UserController {
       if (res.statusCode === 400) {
         throw new Error('Incorrect data');
       }
-      res.status(500).json(e);
+      res.status(400).json(e);
     }
   }
 
@@ -20,7 +20,7 @@ class UserController {
       return res.json(users);
     } catch (e) {
       console.log(e);
-      res.status(500).json(e);
+      res.status(400).json(e);
     }
   }
 
@@ -34,7 +34,7 @@ class UserController {
       if (res.statusCode === 404) {
         throw new Error('We dont have this user');
       }
-      res.status(500).json(e);
+      res.status(400).json(e);
     }
   }
 
@@ -47,7 +47,7 @@ class UserController {
       if (res.statusCode === 400) {
         throw new Error('Incorrect data');
       }
-      res.status(500).json(e);
+      res.status(400).json(e);
     }
   }
 
@@ -60,7 +60,7 @@ class UserController {
       if (res.statusCode === 400) {
         throw new Error('Incorrect data');
       }
-      res.status(500).json(e);
+      res.status(400).json(e);
     }
   }
 }
