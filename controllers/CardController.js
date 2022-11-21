@@ -8,6 +8,9 @@ class CardController {
       return res.json(card);
     } catch (e) {
       console.log(e);
+      if (res.statusCode === 400) {
+        throw new Error('Incorrect data');
+      }
       res.status(500).json(e);
     }
   }
@@ -29,6 +32,9 @@ class CardController {
       return res.json(cards);
     } catch (e) {
       console.log(e);
+      if (res.statusCode === 404) {
+        throw new Error('We dont have this card');
+      }
       res.status(500).json(e);
     }
   }

@@ -2,13 +2,20 @@ import Card from '../models/Card.js';
 
 class CardService {
   async create(card) {
+    if (!card) {
+      throw new Error('Something went wrong');
+    }
     const createCard = await Card.create(card);
     return createCard;
   }
 
   async getAll() {
-    const cards = await Card.find();
-    return cards;
+    try {
+      const cards = await Card.find();
+      return cards;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async removeCard(id) {
