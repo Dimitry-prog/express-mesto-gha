@@ -11,7 +11,7 @@ class CardService {
     return cards;
   }
 
-  async removeCard(id) {
+  async remove(id) {
     if (!id) {
       throw new Error('We cant find this card');
     }
