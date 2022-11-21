@@ -19,19 +19,19 @@ class UserService {
     return user;
   }
 
-  async updateProfile(user) {
-    if (!user._id) {
+  async updateProfile(id, user) {
+    if (!id) {
       throw new Error('We cant find this user in our base');
     }
-    const updatedUserProfile = await User.findByIdAndUpdate(user._id, user, { new: true });
-    return updatedUserProfile;
+    const updatedProfile = await User.findByIdAndUpdate(id, user, { new: true });
+    return updatedProfile;
   }
 
-  async updateAvatar(user) {
-    if (!user._id) {
+  async updateAvatar(id, user) {
+    if (!id) {
       throw new Error('We cant find this user in our base');
     }
-    const updatedUserAvatar = await User.findByIdAndUpdate(user._id, user, { new: true });
+    const updatedUserAvatar = await User.findByIdAndUpdate(id, user, { new: true });
     return updatedUserAvatar;
   }
 }

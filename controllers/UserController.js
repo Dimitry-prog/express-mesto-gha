@@ -23,7 +23,8 @@ class UserController {
 
   async getSingle(req, res) {
     try {
-      const user = await UserService.getSingle(req.params.id);
+      console.log(req.params);
+      const user = await UserService.getSingle(req.params.userId);
       return res.json(user);
     } catch (e) {
       console.log(e);
@@ -33,8 +34,8 @@ class UserController {
 
   async updateProfile(req, res) {
     try {
-      const updatedUserProfile = await UserService.updateProfile(req.body);
-      return res.json(updatedUserProfile);
+      const updatedProfile = await UserService.updateProfile(req.user._id, req.body);
+      return res.json(updatedProfile);
     } catch (e) {
       console.log(e);
       res.status(500).json(e);
@@ -43,7 +44,7 @@ class UserController {
 
   async updateAvatar(req, res) {
     try {
-      const updatedUserAvatar = await UserService.updateAvatar(req.body);
+      const updatedUserAvatar = await UserService.updateAvatar(req.user._id, req.body);
       return res.json(updatedUserAvatar);
     } catch (e) {
       console.log(e);
