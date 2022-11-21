@@ -30,6 +30,26 @@ class UserController {
       res.status(500).json(e);
     }
   }
+
+  async updateProfile(req, res) {
+    try {
+      const updatedUserProfile = await UserService.updateProfile(req.body);
+      return res.json(updatedUserProfile);
+    } catch (e) {
+      console.log(e);
+      res.status(500).json(e);
+    }
+  }
+
+  async updateAvatar(req, res) {
+    try {
+      const updatedUserAvatar = await UserService.updateAvatar(req.body);
+      return res.json(updatedUserAvatar);
+    } catch (e) {
+      console.log(e);
+      res.status(500).json(e);
+    }
+  }
 }
 
 export default new UserController();
