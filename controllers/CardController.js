@@ -1,4 +1,4 @@
-import CardService from '../services/CardService';
+import CardService from '../services/CardService.js';
 
 class CardController {
   async create(req, res) {

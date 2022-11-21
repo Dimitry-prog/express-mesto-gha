@@ -14,6 +14,7 @@ const User = new mongoose.Schema({
     required: true,
   },
   avatar: {
+    type: String,
     imageURL: String,
     required: true,
   },
