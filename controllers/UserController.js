@@ -33,13 +33,25 @@ class UserController {
       const user = await UserService.getSingle(req.params.userId);
       return res.json(user);
     } catch (e) {
-      console.log(e);
+      // console.log('ERRORS: ', e);
       // if (res.statusCode === 404) {
       //   throw new Error('We dont have this user');
       // }
 
-      next(e);
-      res.status(400).json(e);
+      // next(e);
+      // res.status(400).json(e);
+      // if (e.message === 'Wecantfindthisuser') {
+      //   next({ status: 404, message: 'Not have user' });
+      // } else {
+      //   next({ status: 500, message: 'Server not response 2' });
+      // }
+      // next(e.message);
+      if (e.name === 'ValidationError') {
+        return res.status(400).json(e);
+      } if (e.name === 'CastError') {
+        return res.status(404).json(e);
+      }
+      return res.status(500).json(e);
     }
   }
 

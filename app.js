@@ -14,14 +14,14 @@ app.use(express.json());
 app.use((req, res, next) => {
   console.log(req);
   req.user = {
-    _id: '637bc178186f17a1e0b0364f',
+    _id: '637d01b9770881fcf5dc23c2',
   };
 
   next();
 });
 
-app.use('/', userRouter);
-app.use('/', cardRouter);
+app.use(userRouter);
+app.use(cardRouter);
 
 // app.use((req, res, next) => {
 //   res.status(404).send("We can't find it");
