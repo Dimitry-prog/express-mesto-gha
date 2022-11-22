@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import userRouter from './routes/UserRouter.js';
 import cardRouter from './routes/CardRouter.js';
+import handleErrors from './middlewares/handleErrors.js';
 
 const PORT = 3000;
 // const DB_URL = 'mongodb+srv://user:user@cluster0.deipiap.mongodb.net/?retryWrites=true&w=majority';
@@ -22,10 +23,12 @@ app.use((req, res, next) => {
 app.use('/', userRouter);
 app.use('/', cardRouter);
 
-app.use((req, res, next) => {
-  res.status(404).send("We can't find it");
-  next();
-});
+// app.use((req, res, next) => {
+//   res.status(404).send("We can't find it");
+//   next();
+// });
+
+app.use(handleErrors);
 
 const startApp = async () => {
   try {

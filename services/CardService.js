@@ -1,17 +1,17 @@
-import Card from '../models/Card.js';
+import CardModal from '../models/CardModel.js';
 
 class CardService {
   async create(card) {
     if (!card) {
       throw new Error('Something went wrong');
     }
-    const createCard = await Card.create(card);
+    const createCard = await CardModal.create(card);
     return createCard;
   }
 
   async getAll() {
     try {
-      const cards = await Card.find();
+      const cards = await CardModal.find();
       return cards;
     } catch (e) {
       console.log(e);
@@ -22,7 +22,7 @@ class CardService {
     if (!id) {
       throw new Error('We cant find this card');
     }
-    const card = await Card.findByIdAndDelete(id);
+    const card = await CardModal.findByIdAndDelete(id);
     return card;
   }
 
@@ -30,7 +30,7 @@ class CardService {
     if (!id) {
       throw new Error('We cant find this card');
     }
-    const like = await Card.findByIdAndUpdate(id, card, { new: true });
+    const like = await CardModal.findByIdAndUpdate(id, card, { new: true });
     return like;
   }
 
@@ -38,7 +38,7 @@ class CardService {
     if (!id) {
       throw new Error('We cant find this card');
     }
-    const dislike = await Card.findByIdAndUpdate(id, card, { new: true });
+    const dislike = await CardModal.findByIdAndUpdate(id, card, { new: true });
     return dislike;
   }
 }

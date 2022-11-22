@@ -27,16 +27,18 @@ class UserController {
     }
   }
 
-  async getSingle(req, res) {
+  async getSingle(req, res, next) {
     try {
       console.log(req.params);
       const user = await UserService.getSingle(req.params.userId);
       return res.json(user);
     } catch (e) {
       console.log(e);
-      if (res.statusCode === 404) {
-        throw new Error('We dont have this user');
-      }
+      // if (res.statusCode === 404) {
+      //   throw new Error('We dont have this user');
+      // }
+
+      next(e);
       res.status(400).json(e);
     }
   }

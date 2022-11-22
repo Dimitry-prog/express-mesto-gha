@@ -1,17 +1,17 @@
-import User from '../models/User.js';
+import UserModal from '../models/UserModel.js';
 
 class UserService {
   async create(user) {
     if (!user) {
       throw new Error('Something went wrong');
     }
-    const createUser = await User.create(user);
+    const createUser = await UserModal.create(user);
     return createUser;
   }
 
   async getAll() {
     try {
-      const users = await User.find();
+      const users = await UserModal.find();
       return users;
     } catch (e) {
       console.log(e);
@@ -22,7 +22,7 @@ class UserService {
     if (!id) {
       throw new Error('We cant find this user');
     }
-    const user = await User.findById(id);
+    const user = await UserModal.findById(id);
     return user;
   }
 
@@ -30,7 +30,7 @@ class UserService {
     if (!id) {
       throw new Error('We cant find this user');
     }
-    const updatedProfile = await User.findByIdAndUpdate(id, user, { new: true });
+    const updatedProfile = await UserModal.findByIdAndUpdate(id, user, { new: true });
     return updatedProfile;
   }
 
@@ -38,7 +38,7 @@ class UserService {
     if (!id) {
       throw new Error('We cant find this user');
     }
-    const updatedUserAvatar = await User.findByIdAndUpdate(id, user, { new: true });
+    const updatedUserAvatar = await UserModal.findByIdAndUpdate(id, user, { new: true });
     return updatedUserAvatar;
   }
 }
