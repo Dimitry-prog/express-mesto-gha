@@ -19,12 +19,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  res.status(404).send("We can't find it");
-});
-
 app.use('/', userRouter);
 app.use('/', cardRouter);
+
+app.use((req, res, next) => {
+  res.status(404).send("We can't find it");
+  next();
+});
 
 const startApp = async () => {
   try {
