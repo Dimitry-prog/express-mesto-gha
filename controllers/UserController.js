@@ -10,6 +10,9 @@ class UserController {
       if (res.statusCode === 400) {
         throw new Error('Incorrect data');
       }
+      if (res.statusCode === 404) {
+        throw new Error('Incorrect ыефегы 404');
+      }
       res.status(400).json(e);
     }
   }
@@ -31,10 +34,10 @@ class UserController {
       return res.json(user);
     } catch (e) {
       console.log(e);
-      if (res.statusCode === 404) {
-        throw new Error('We dont have this user');
-      }
-      res.status(400).json(e);
+      // if (res.statusCode === 404) {
+      //   throw new Error('We dont have this user');
+      // }
+      res.status(404).json(e);
     }
   }
 
@@ -45,9 +48,9 @@ class UserController {
     } catch (e) {
       console.log(e);
       if (res.statusCode === 400) {
-        throw new Error('Incorrect data');
+        res.status(400).json(e);
       }
-      res.status(400).json(e);
+      res.status(500).json(e);
     }
   }
 
