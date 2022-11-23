@@ -31,10 +31,10 @@ class UserController {
       return res.json(user);
     } catch (e) {
       if (req.params.userId.length < 24) {
-        return res.status(400).json(e.message);
+        return res.status(400).json({ message: 'Not match id' });
       }
       if (req.params.userId.length > 24) {
-        return res.status(404).json(e.message);
+        return res.status(404).json({ message: 'Incorrect id' });
       }
       res.status(500).json(e.message);
     }
