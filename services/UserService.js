@@ -14,13 +14,12 @@ class UserService {
       const users = await UserModal.find();
       return users;
     } catch (e) {
-      console.log(e);
     }
   }
 
   async getSingle(id) {
     if (!id) {
-      throw new Error('We cant find this user');
+      throw new Error('Something went wrong');
     }
     const user = await UserModal.findById(id);
     return user;

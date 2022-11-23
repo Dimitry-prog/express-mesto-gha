@@ -14,7 +14,6 @@ class CardService {
       const cards = await CardModal.find();
       return cards;
     } catch (e) {
-      console.log(e);
     }
   }
 

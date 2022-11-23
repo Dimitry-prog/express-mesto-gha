@@ -7,11 +7,10 @@ class CardController {
       const card = await CardService.create({ ...req.body, owner: id });
       return res.json(card);
     } catch (e) {
-      console.log(e);
       if (res.statusCode === 400) {
-        throw new Error('Incorrect data');
+        return res.status(400).json(e.message);
       }
-      res.status(400).json(e);
+      res.status(500).json(e.message);
     }
   }
 
@@ -20,8 +19,7 @@ class CardController {
       const cards = await CardService.getAll();
       return res.json(cards);
     } catch (e) {
-      console.log(e);
-      res.status(400).json(e);
+      res.status(500).json(e.message);
     }
   }
 
@@ -31,11 +29,10 @@ class CardController {
       const cards = await CardService.removeCard(req.params.cardId);
       return res.json(cards);
     } catch (e) {
-      console.log(e);
       if (res.statusCode === 404) {
-        throw new Error('We dont have this card');
+        return res.status(400).json(e.message);
       }
-      res.status(400).json(e);
+      res.status(500).json(e.message);
     }
   }
 
@@ -44,8 +41,7 @@ class CardController {
       const like = await CardService.like(req.params.cardId, { $addToSet: { likes: req.user._id } });
       return res.json(like);
     } catch (e) {
-      console.log(e);
-      res.status(400).json(e);
+      res.status(500).json(e.message);
     }
   }
 
@@ -54,8 +50,7 @@ class CardController {
       const dislike = await CardService.dislike(req.params.cardId, { $pull: { likes: req.user._id } });
       return res.json(dislike);
     } catch (e) {
-      console.log(e);
-      res.status(400).json(e);
+      res.status(500).json(e.message);
     }
   }
 }
