@@ -23,7 +23,10 @@ app.use((req, res, next) => {
 app.use(userRouter);
 app.use(cardRouter);
 
-app.use('*', (req, res, next) => res.staus(404).json('DATA FAIL'));
+app.use('*', (req, res, next) => {
+  res.staus(404).json({ message: 'DATA FAIL' });
+});
+
 app.use(handleErrors);
 
 const startApp = async () => {

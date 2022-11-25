@@ -27,7 +27,7 @@ class CardController {
       const cards = await CardService.removeCard(req.params.cardId);
 
       if (!cards) {
-        return res.status(404).json('Card not found');
+        return res.status(404).json({ message: 'Card not found' });
       }
 
       return res.json(cards);
