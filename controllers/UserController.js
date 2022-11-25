@@ -36,7 +36,7 @@ class UserController {
       return res.json(user);
     } catch (e) {
       console.log(e);
-      return res.status(500).json({ message: 'Server' });
+      return res.status(400).json({ message: 'Incorrect data' });
     }
   }
 
