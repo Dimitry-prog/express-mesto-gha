@@ -26,19 +26,19 @@ class UserService {
     return user;
   }
 
-  async updateProfile(id) {
+  async updateProfile(id, user) {
     if (!id) {
       throw new Error('We cant find this user');
     }
-    const updatedProfile = await UserModal.findByIdAndUpdate(id, { new: true });
+    const updatedProfile = await UserModal.findByIdAndUpdate(id, user, { new: true });
     return updatedProfile;
   }
 
-  async updateAvatar(id) {
+  async updateAvatar(id, user) {
     if (!id) {
       throw new Error('We cant find this user');
     }
-    const updatedUserAvatar = await UserModal.findByIdAndUpdate(id, { new: true });
+    const updatedUserAvatar = await UserModal.findByIdAndUpdate(id, user, { new: true });
     return updatedUserAvatar;
   }
 }
