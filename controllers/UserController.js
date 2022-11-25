@@ -43,7 +43,9 @@ class UserController {
         return res.status(400).json({ message: 'Incorrect data' });
       }
 
-      return res.json(updatedProfile);
+      if (updatedProfile) {
+        return res.json(updatedProfile);
+      }
     } catch (e) {
       console.log(e);
       return res.status(404).json({ message: 'Incorrect data' });
