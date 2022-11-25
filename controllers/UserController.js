@@ -6,13 +6,8 @@ class UserController {
       const user = await UserService.create(req.body);
       return res.json(user);
     } catch (e) {
-      if (res.statusCode === 400) {
-        return res.status(400).json(e.message);
-      }
-      if (res.statusCode === 404) {
-        return res.status(404).json(e.message);
-      }
-      res.status(500).json(e.message);
+      console.log(e);
+      return res.status(400).json({ message: e.message });
     }
   }
 
