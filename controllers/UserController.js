@@ -25,18 +25,18 @@ class UserController {
     }
   }
 
-  async getSingle(req, res, next) {
+  async getSingle(req, res) {
     try {
       const user = await UserService.getSingle(req.params.userId);
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
       return res.json(user);
     } catch (e) {
-      if (req.params.userId.length < 24) {
-        return res.status(400).json({ message: 'Not match id' });
-      }
-      if (req.params.userId.length > 24) {
-        return res.status(404).json({ message: 'Incorrect id' });
-      }
-      res.status(500).json(e.message);
+      console.log(e);
+      return res.status(500).json({ message: 'Server' });
     }
   }
 
