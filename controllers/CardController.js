@@ -41,7 +41,7 @@ class CardController {
       const like = await CardService.like(req.params.cardId, { $addToSet: { likes: req.user._id } });
 
       if (!like) {
-        return res.status(404).json('Card not found');
+        return res.status(404).json({ message: 'Card not found' });
       }
 
       return res.json(like);
@@ -55,12 +55,12 @@ class CardController {
       const dislike = await CardService.dislike(req.params.cardId, { $pull: { likes: req.user._id } });
 
       if (!dislike) {
-        return res.status(400).json('Incorrect id');
+        return res.status(404).json({ message: 'Incorrect id' });
       }
 
       return res.json(dislike);
     } catch (e) {
-      return res.status(404).json({ message: e.message });
+      return res.status(400).json({ message: e.message });
     }
   }
 }

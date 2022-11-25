@@ -39,19 +39,20 @@ class UserController {
     try {
       const updatedProfile = await UserService.updateProfile(req.user._id, req.body);
 
-      if (!updatedProfile) {
-        return res.status(400).json({ message: 'Incorrect data' });
-      }
+      // if (!updatedProfile) {
+      //   return res.status(400).json({ message: 'Incorrect data' });
+      // }
 
       return res.json(updatedProfile);
     } catch (e) {
       console.log(e);
-      return res.status(404).json({ message: e.message });
+      return res.status(400).json({ message: 'Incorrect data' });
     }
   }
 
   async updateAvatar(req, res) {
     try {
+      console.log(req.body);
       const updatedUserAvatar = await UserService.updateAvatar(req.user._id, req.body);
       return res.json(updatedUserAvatar);
     } catch (e) {
