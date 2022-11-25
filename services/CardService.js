@@ -26,19 +26,19 @@ class CardService {
     return card;
   }
 
-  async like(id, card) {
+  async like(id) {
     if (!id) {
       throw new Error('We cant find this card');
     }
-    const like = await CardModal.findByIdAndUpdate(id, card, { new: true });
+    const like = await CardModal.findByIdAndUpdate(id, { new: true });
     return like;
   }
 
-  async dislike(id, card) {
+  async dislike(id) {
     if (!id) {
       throw new Error('We cant find this card');
     }
-    const dislike = await CardModal.findByIdAndUpdate(id, card, { new: true });
+    const dislike = await CardModal.findByIdAndUpdate(id, { new: true });
     return dislike;
   }
 }
