@@ -37,7 +37,7 @@ class UserController {
 
   async updateProfile(req, res) {
     try {
-      const updatedProfile = await UserService.updateProfile(req.params.userId);
+      const updatedProfile = await UserService.updateProfile(req.user._id);
 
       if (!updatedProfile) {
         return res.status(404).json({ message: 'Not found' });
@@ -55,7 +55,7 @@ class UserController {
   async updateAvatar(req, res) {
     try {
       console.log(req.body);
-      const updatedUserAvatar = await UserService.updateAvatar(req.params.userId);
+      const updatedUserAvatar = await UserService.updateAvatar(req.user._id);
       return res.json(updatedUserAvatar);
     } catch (e) {
       console.log(e);
