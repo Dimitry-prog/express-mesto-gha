@@ -39,9 +39,9 @@ class UserController {
     try {
       const updatedProfile = await UserService.updateProfile(req.user._id, req.body);
 
-      if (!updatedProfile) {
-        return res.status(400).json({ message: 'Incorrect data' });
-      }
+      // if (!updatedProfile) {
+      //   return res.status(400).json({ message: 'Incorrect data' });
+      // }
 
       return res.json(updatedProfile);
     } catch (e) {

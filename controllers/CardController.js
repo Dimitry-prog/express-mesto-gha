@@ -27,12 +27,12 @@ class CardController {
       const cards = await CardService.removeCard(req.params.cardId);
 
       if (!cards) {
-        return res.status(400).json('Incorrect id');
+        return res.status(404).json('Card not found');
       }
 
       return res.json(cards);
     } catch (e) {
-      return res.status(404).json({ message: e.message });
+      return res.status(400).json({ message: e.message });
     }
   }
 
@@ -41,12 +41,12 @@ class CardController {
       const like = await CardService.like(req.params.cardId, { $addToSet: { likes: req.user._id } });
 
       if (!like) {
-        return res.status(400).json('Incorrect id');
+        return res.status(404).json('Card not found');
       }
 
       return res.json(like);
     } catch (e) {
-      return res.status(404).json({ message: e.message });
+      return res.status(400).json({ message: e.message });
     }
   }
 
