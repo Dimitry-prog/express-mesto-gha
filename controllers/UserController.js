@@ -16,7 +16,7 @@ class UserController {
       const users = await UserService.getAll();
       return res.json(users);
     } catch (e) {
-      res.status(500).json(e.message);
+      return res.status(500).json({ message: e.message });
     }
   }
 
@@ -37,25 +37,21 @@ class UserController {
 
   async updateProfile(req, res) {
     try {
-      const updatedProfile = await UserService.updateProfile(req.user._id, req.body);
+      const updatedProfile = await UserService.updateProfile(req.body);
       return res.json(updatedProfile);
     } catch (e) {
-      if (res.statusCode === 400) {
-        return res.status(400).json(e.message);
-      }
-      res.status(500).json(e.message);
+      console.log(e);
+      return res.status(400).json({ message: e.message });
     }
   }
 
   async updateAvatar(req, res) {
     try {
-      const updatedUserAvatar = await UserService.updateAvatar(req.user._id, req.body);
+      const updatedUserAvatar = await UserService.updateAvatar(req.body);
       return res.json(updatedUserAvatar);
     } catch (e) {
-      if (res.statusCode === 400) {
-        return res.status(400).json(e.message);
-      }
-      res.status(500).json(e.message);
+      console.log(e);
+      return res.status(400).json({ message: e.message });
     }
   }
 }
