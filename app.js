@@ -24,6 +24,8 @@ app.use(userRouter);
 app.use(cardRouter);
 app.use(handleErrors);
 
+app.use('*', (req, res, next) => res.staus(404).json('DATA FAIL'));
+
 const startApp = async () => {
   try {
     await mongoose.connect(DB_URL, { useUnifiedTopology: true, useNewUrlParser: true });

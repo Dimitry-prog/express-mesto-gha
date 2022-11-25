@@ -40,13 +40,13 @@ class UserController {
       const updatedProfile = await UserService.updateProfile(req.user._id, req.body);
 
       if (!updatedProfile) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(400).json({ message: 'Incorrect data' });
       }
 
       return res.json(updatedProfile);
     } catch (e) {
       console.log(e);
-      return res.status(400).json({ message: e.message });
+      return res.status(404).json({ message: e.message });
     }
   }
 

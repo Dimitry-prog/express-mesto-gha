@@ -25,6 +25,11 @@ class CardController {
     try {
       console.log(req.params);
       const cards = await CardService.removeCard(req.params.cardId);
+
+      if (!cards) {
+        return res.status(400).json('Incorrect id');
+      }
+
       return res.json(cards);
     } catch (e) {
       return res.status(404).json({ message: e.message });
@@ -34,6 +39,11 @@ class CardController {
   async like(req, res) {
     try {
       const like = await CardService.like(req.params.cardId, { $addToSet: { likes: req.user._id } });
+
+      if (!like) {
+        return res.status(400).json('Incorrect id');
+      }
+
       return res.json(like);
     } catch (e) {
       return res.status(404).json({ message: e.message });
@@ -43,6 +53,11 @@ class CardController {
   async dislike(req, res) {
     try {
       const dislike = await CardService.dislike(req.params.cardId, { $pull: { likes: req.user._id } });
+
+      if (!dislike) {
+        return res.status(400).json('Incorrect id');
+      }
+
       return res.json(dislike);
     } catch (e) {
       return res.status(404).json({ message: e.message });
