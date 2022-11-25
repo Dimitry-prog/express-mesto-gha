@@ -7,10 +7,8 @@ class CardController {
       const card = await CardService.create({ ...req.body, owner: id });
       return res.json(card);
     } catch (e) {
-      if (res.statusCode === 400) {
-        return res.status(400).json(e.message);
-      }
-      res.status(500).json(e.message);
+      console.log(e);
+      return res.status(400).json({ message: e.message });
     }
   }
 
@@ -19,7 +17,7 @@ class CardController {
       const cards = await CardService.getAll();
       return res.json(cards);
     } catch (e) {
-      res.status(500).json(e.message);
+      return res.status(500).json({ message: e.message });
     }
   }
 
@@ -29,10 +27,7 @@ class CardController {
       const cards = await CardService.removeCard(req.params.cardId);
       return res.json(cards);
     } catch (e) {
-      if (res.statusCode === 404) {
-        return res.status(400).json(e.message);
-      }
-      res.status(500).json(e.message);
+      return res.status(404).json({ message: e.message });
     }
   }
 
@@ -41,7 +36,7 @@ class CardController {
       const like = await CardService.like(req.params.cardId, { $addToSet: { likes: req.user._id } });
       return res.json(like);
     } catch (e) {
-      res.status(500).json(e.message);
+      return res.status(404).json({ message: e.message });
     }
   }
 
@@ -50,7 +45,7 @@ class CardController {
       const dislike = await CardService.dislike(req.params.cardId, { $pull: { likes: req.user._id } });
       return res.json(dislike);
     } catch (e) {
-      res.status(500).json(e.message);
+      return res.status(404).json({ message: e.message });
     }
   }
 }

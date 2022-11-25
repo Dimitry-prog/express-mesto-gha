@@ -14,6 +14,7 @@ class UserService {
       const users = await UserModal.find();
       return users;
     } catch (e) {
+      throw new Error('Something went wrong');
     }
   }
 
@@ -25,19 +26,19 @@ class UserService {
     return user;
   }
 
-  async updateProfile(user) {
-    if (!user._id) {
+  async updateProfile(id, user) {
+    if (!id) {
       throw new Error('We cant find this user');
     }
-    const updatedProfile = await UserModal.findByIdAndUpdate(user._id, user, { new: true });
+    const updatedProfile = await UserModal.findByIdAndUpdate(id, user, { new: true });
     return updatedProfile;
   }
 
-  async updateAvatar(user) {
-    if (!user._id) {
+  async updateAvatar(id, user) {
+    if (!id) {
       throw new Error('We cant find this user');
     }
-    const updatedUserAvatar = await UserModal.findByIdAndUpdate(user, { new: true });
+    const updatedUserAvatar = await UserModal.findByIdAndUpdate(id, user, { new: true });
     return updatedUserAvatar;
   }
 }
