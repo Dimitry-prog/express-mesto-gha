@@ -34,11 +34,11 @@ class UserService {
     return updatedProfile;
   }
 
-  async updateAvatar(id) {
+  async updateAvatar(id, avatar) {
     if (!id) {
       throw new Error('We cant find this user');
     }
-    const updatedUserAvatar = await UserModal.findByIdAndUpdate(id, { new: true });
+    const updatedUserAvatar = await UserModal.findByIdAndUpdate(id,avatar, { new: true });
     return updatedUserAvatar;
   }
 }

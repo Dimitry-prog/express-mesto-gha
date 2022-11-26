@@ -55,7 +55,7 @@ class UserController {
   async updateAvatar(req, res) {
     try {
       console.log(req.body);
-      const updatedUserAvatar = await UserService.updateAvatar(req.user._id);
+      const updatedUserAvatar = await UserService.updateAvatar(req.user._id, req.body);
       return res.json(updatedUserAvatar);
     } catch (e) {
       console.log(e);
