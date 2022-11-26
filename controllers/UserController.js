@@ -37,10 +37,10 @@ class UserController {
 
   async updateProfile(req, res) {
     try {
-      const updatedProfile = await UserService.updateProfile(req.user._id);
+      const updatedProfile = await UserService.updateProfile(req.user._id, req.body);
 
       if (updatedProfile) {
-        return res.json(updatedProfile);
+        return res.status(200).json(updatedProfile);
       }
 
       if (!updatedProfile) {
@@ -65,3 +65,20 @@ class UserController {
 }
 
 export default new UserController();
+
+// const updateProfile = async (req, res) => {
+//   try {
+//     const updatedProfile = await User.findByIdAndUpdate(req.user._id, { new: true });
+//
+//     if (updatedProfile) {
+//       return res.status(200).json(updatedProfile);
+//     }
+//
+//     if (!updatedProfile) {
+//       return res.status(400).json({ message: 'Incorrect data' });
+//     }
+//   } catch (e) {
+//     console.log(e);
+//     return res.status(404).json({ message: 'Not found' });
+//   }
+// };
