@@ -26,11 +26,11 @@ class UserService {
     return user;
   }
 
-  async updateProfile(id, profile) {
-    if (!id) {
-      throw new Error('We cant find this user');
-    }
-    const updatedProfile = await UserModal.findByIdAndUpdate(id, profile, { new: true, runValidators: true });
+  async updateProfile(profile) {
+    // if (!id) {
+    //   throw new Error('We cant find this user');
+    // }
+    const updatedProfile = await UserModal.findByIdAndUpdate(profile._id, profile, { new: true, runValidators: true });
     return updatedProfile;
   }
 
