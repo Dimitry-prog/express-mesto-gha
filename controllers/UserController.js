@@ -37,7 +37,7 @@ class UserController {
 
   async updateProfile(req, res) {
     try {
-      const updatedProfile = await UserService.updateProfile(req.user._id, { new: true, runValidators: true });
+      const updatedProfile = await UserService.updateProfile(req.user._id, req.body);
 
       if (updatedProfile) {
         return res.status(200).json(updatedProfile);
@@ -55,7 +55,10 @@ class UserController {
   async updateAvatar(req, res) {
     try {
       console.log(req.body);
-      const updatedUserAvatar = await UserService.updateAvatar(req.user._id, { new: true, runValidators: true });
+      const updatedUserAvatar = await UserService.updateAvatar(req.user._id, req.body, {
+        new: true,
+        runValidators: true,
+      });
       return res.json(updatedUserAvatar);
     } catch (e) {
       console.log(e);
