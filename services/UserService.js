@@ -30,7 +30,7 @@ class UserService {
     if (!id) {
       throw new Error('We cant find this user');
     }
-    const updatedProfile = await UserModal.findByIdAndUpdate(id, { profile }, { new: true, runValidators: true });
+    const updatedProfile = await UserModal.findByIdAndUpdate(id, profile, { new: true, runValidators: true });
     return updatedProfile;
   }
 
@@ -38,7 +38,7 @@ class UserService {
     if (!id) {
       throw new Error('We cant find this user');
     }
-    const updatedUserAvatar = await UserModal.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true });
+    const updatedUserAvatar = await UserModal.findByIdAndUpdate(id, avatar, { new: true, runValidators: true });
     return updatedUserAvatar;
   }
 }
