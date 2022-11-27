@@ -49,7 +49,7 @@ class UserController {
       //   return res.status(200).json(updatedProfile);
       // }
 
-      return res.status(200).json(updatedProfile);
+      return res.json(updatedProfile);
     } catch (e) {
       console.log(e);
       // return res.status(404).json({ message: 'Not found' });
