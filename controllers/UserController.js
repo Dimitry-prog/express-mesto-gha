@@ -35,21 +35,28 @@ class UserController {
     }
   }
 
-  async updateProfile(req, res) {
+  async updateProfile(req, res, next) {
     try {
       const updatedProfile = await UserService.updateProfile(req.user._id, req.body);
 
-      if (updatedProfile) {
-        return res.status(200).json(updatedProfile);
+      if (!updatedProfile) {
+        // return res.status(400).json({ message: 'Incorrect data' });
+        return res.status(404).json({ message: 'Not found' });
       }
 
-      // if (!updatedProfile) {
-      //   return res.status(400).json({ message: 'Incorrect data' });
+      // if (updatedProfile) {
+      //   return res.status(200).json(updatedProfile);
       // }
+
+      return res.status(200).json(updatedProfile);
     } catch (e) {
       console.log(e);
       // return res.status(404).json({ message: 'Not found' });
-      return res.status(400).json({ message: 'Incorrect data' });
+      // return res.status(400).json({ message: 'Incorrect data' });
+      if (e.name === 'ValidationError' || e.name === 'CastError') {
+        return res.status(400).json({ message: 'Incorrect data' });
+      }
+      next(e);
     }
   }
 

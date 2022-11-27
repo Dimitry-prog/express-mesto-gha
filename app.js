@@ -24,7 +24,7 @@ app.use(userRouter);
 app.use(cardRouter);
 
 app.use('*', (req, res, next) => {
-  res.staus(404).json({ message: 'DATA FAIL' });
+  res.status(404).json({ message: 'DATA FAIL' });
 });
 
 app.use(handleErrors);
