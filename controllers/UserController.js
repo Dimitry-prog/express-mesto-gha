@@ -43,12 +43,13 @@ class UserController {
         return res.status(200).json(updatedProfile);
       }
 
-      if (!updatedProfile) {
-        return res.status(400).json({ message: 'Incorrect data' });
-      }
+      // if (!updatedProfile) {
+      //   return res.status(400).json({ message: 'Incorrect data' });
+      // }
     } catch (e) {
       console.log(e);
-      return res.status(404).json({ message: 'Not found' });
+      // return res.status(404).json({ message: 'Not found' });
+      return res.status(400).json({ message: 'Incorrect data' });
     }
   }
 
