@@ -37,7 +37,7 @@ class UserController {
 
   async updateProfile(req, res) {
     try {
-      const updatedProfile = await UserService.updateProfile(req.user._id, req.body);
+      const updatedProfile = await UserService.updateProfile(req.user._id, { new: true, runValidators: true });
 
       if (updatedProfile) {
         return res.status(200).json(updatedProfile);
@@ -55,7 +55,7 @@ class UserController {
   async updateAvatar(req, res) {
     try {
       console.log(req.body);
-      const updatedUserAvatar = await UserService.updateAvatar(req.user._id, req.body);
+      const updatedUserAvatar = await UserService.updateAvatar(req.user._id, { new: true, runValidators: true });
       return res.json(updatedUserAvatar);
     } catch (e) {
       console.log(e);
@@ -68,7 +68,7 @@ export default new UserController();
 
 // const updateProfile = async (req, res) => {
 //   try {
-//     const updatedProfile = await User.findByIdAndUpdate(req.user._id, { new: true });
+//     const updatedProfile = await User.findByIdAndUpdate(req.user._id, req.body, { new: true });
 //
 //     if (updatedProfile) {
 //       return res.status(200).json(updatedProfile);
@@ -82,3 +82,4 @@ export default new UserController();
 //     return res.status(404).json({ message: 'Not found' });
 //   }
 // };
+// router.patch('/users/me', updateProfile);
