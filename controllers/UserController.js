@@ -64,18 +64,12 @@ class UserController {
   async updateAvatar(req, res) {
     try {
       console.log(req.body);
-      const { body } = req;
-      if (!body.avatar) {
-        return res.status(400).json({ message: 'dont have avatar' });
-      }
-      // const updatedUserAvatar = await UserService.updateAvatar(req.user._id, body.avatar);
-      // return res.json(updatedUserAvatar);
-
-      return this.updateProfile(res, req, next);
+      const { avatar } = req.body;
+      const updatedUserAvatar = await UserService.updateAvatar(req.user._id, { avatar });
+      return res.json(updatedUserAvatar);
     } catch (e) {
       console.log(e);
-      // return res.status(400).json({ message: e.message });
-      return res.status(607).json({ message: ',kf ,fkf fkk' });
+      return res.status(400).json({ message: e.message });
     }
   }
 }
