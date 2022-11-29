@@ -71,7 +71,7 @@ class UserController {
       // const updatedUserAvatar = await UserService.updateAvatar(req.user._id, body.avatar);
       // return res.json(updatedUserAvatar);
 
-      return this.updateProfile(req, res, next);
+      return this.updateProfile(res, req, next);
     } catch (e) {
       console.log(e);
       // return res.status(400).json({ message: e.message });
