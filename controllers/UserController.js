@@ -68,8 +68,10 @@ class UserController {
       if (!body.avatar) {
         return res.status(400).json({ message: 'dont have avatar' });
       }
-      const updatedUserAvatar = await UserService.updateAvatar(req.user._id, body.avatar);
-      return res.json(updatedUserAvatar);
+      // const updatedUserAvatar = await UserService.updateAvatar(req.user._id, body.avatar);
+      // return res.json(updatedUserAvatar);
+
+      return this.updateProfile(req, res, next);
     } catch (e) {
       console.log(e);
       // return res.status(400).json({ message: e.message });
