@@ -2,9 +2,6 @@ import CardModal from '../models/CardModel.js';
 
 class CardService {
   async create(card) {
-    if (!card) {
-      throw new Error('Something went wrong');
-    }
     const createCard = await CardModal.create(card);
     return createCard;
   }
@@ -19,25 +16,16 @@ class CardService {
   }
 
   async removeCard(id) {
-    if (!id) {
-      throw new Error('We cant find this card');
-    }
     const card = await CardModal.findByIdAndDelete(id);
     return card;
   }
 
   async like(id) {
-    if (!id) {
-      throw new Error('We cant find this card');
-    }
     const like = await CardModal.findByIdAndUpdate(id, { new: true });
     return like;
   }
 
   async dislike(id) {
-    if (!id) {
-      throw new Error('We cant find this card');
-    }
     const dislike = await CardModal.findByIdAndUpdate(id, { new: true });
     return dislike;
   }

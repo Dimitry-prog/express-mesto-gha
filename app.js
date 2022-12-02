@@ -15,8 +15,8 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true,
 }));
+
 app.use((req, res, next) => {
-  console.log(req);
   req.user = {
     _id: '637d01b9770881fcf5dc23c2',
   };

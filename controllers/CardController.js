@@ -7,8 +7,10 @@ class CardController {
       const card = await CardService.create({ ...req.body, owner: id });
       return res.json(card);
     } catch (e) {
-      console.log(e);
-      return res.status(400).json({ message: e.message });
+      if (e.name === 'ValidationError' || e.name === 'CastError') {
+        return res.status(400).json({ message: 'Incorrect data' });
+      }
+      return res.status(500).json({ message: 'Server not work' });
     }
   }
 
@@ -23,7 +25,6 @@ class CardController {
 
   async removeCard(req, res) {
     try {
-      console.log(req.params);
       const cards = await CardService.removeCard(req.params.cardId);
 
       if (!cards) {
@@ -32,7 +33,10 @@ class CardController {
 
       return res.json(cards);
     } catch (e) {
-      return res.status(400).json({ message: e.message });
+      if (e.name === 'ValidationError' || e.name === 'CastError') {
+        return res.status(400).json({ message: 'Incorrect data' });
+      }
+      return res.status(500).json({ message: 'Server not work' });
     }
   }
 
@@ -46,7 +50,10 @@ class CardController {
 
       return res.json(like);
     } catch (e) {
-      return res.status(400).json({ message: e.message });
+      if (e.name === 'ValidationError' || e.name === 'CastError') {
+        return res.status(400).json({ message: 'Incorrect data' });
+      }
+      return res.status(500).json({ message: 'Server not work' });
     }
   }
 
@@ -60,7 +67,10 @@ class CardController {
 
       return res.json(dislike);
     } catch (e) {
-      return res.status(400).json({ message: e.message });
+      if (e.name === 'ValidationError' || e.name === 'CastError') {
+        return res.status(400).json({ message: 'Incorrect data' });
+      }
+      return res.status(500).json({ message: 'Server not work' });
     }
   }
 }
