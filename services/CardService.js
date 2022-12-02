@@ -1,4 +1,4 @@
-import CardModal from '../models/CardModel.js';
+import CardModal from '../models/CardModel';
 
 class CardService {
   async create(card) {

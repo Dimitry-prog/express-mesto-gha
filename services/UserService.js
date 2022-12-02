@@ -1,4 +1,4 @@
-import UserModal from '../models/UserModel.js';
+import UserModal from '../models/UserModel';
 
 class UserService {
   async create(user) {

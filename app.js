@@ -1,8 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import userRouter from './routes/UserRouter.js';
-import cardRouter from './routes/CardRouter.js';
-import handleErrors from './middlewares/handleErrors.js';
+import userRouter from './routes/UserRouter';
+import cardRouter from './routes/CardRouter';
+import handleErrors from './middlewares/handleErrors';
 
 const PORT = 3000;
 // const DB_URL = 'mongodb+srv://user:user@cluster0.deipiap.mongodb.net/?retryWrites=true&w=majority';

@@ -18,6 +18,12 @@
           "_id"
         ]
       }
+    ],
+    "class-methods-use-this": [
+      "error",
+      {
+        "enforceForClassFields": false
+      }
     ]
   }
 }
