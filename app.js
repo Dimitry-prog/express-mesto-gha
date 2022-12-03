@@ -24,7 +24,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', userRouter);
+app.use(userRouter);
 app.use(cardRouter);
 
 app.use('*', (req, res) => {
