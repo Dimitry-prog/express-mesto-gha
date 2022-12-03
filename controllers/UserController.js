@@ -42,11 +42,7 @@ class UserController {
   static async updateProfile(req, res) {
     try {
       const { name, about } = req.body;
-      const profile = {
-        name,
-        about,
-      };
-      const updatedProfile = await UserService.updateProfile(req.user._id, profile);
+      const updatedProfile = await UserService.updateProfile(req.user._id, name, about);
 
       if (!updatedProfile) {
         return res.status(404).json({ message: 'Not found' });
@@ -64,7 +60,7 @@ class UserController {
   static async updateAvatar(req, res) {
     try {
       const updatedUserAvatar = await UserService
-        .updateAvatar(req.user._id, { avatar: req.body.avatar });
+        .updateAvatar(req.user._id, req.body.avatar);
       return res.json(updatedUserAvatar);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {

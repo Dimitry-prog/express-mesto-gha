@@ -16,18 +16,18 @@ class UserService {
     return user;
   }
 
-  static async updateProfile(id, profile) {
+  static async updateProfile(id, userName, userAbout) {
     const updatedProfile = await UserModal
-      .findByIdAndUpdate(id, profile, {
+      .findByIdAndUpdate(id, { name: userName, about: userAbout }, {
         new: true,
         runValidators: true,
       });
     return updatedProfile;
   }
 
-  static async updateAvatar(id, avatar) {
+  static async updateAvatar(id, userAvatar) {
     const updatedUserAvatar = await UserModal
-      .findByIdAndUpdate(id, avatar, { new: true, runValidators: true });
+      .findByIdAndUpdate(id, { avatar: userAvatar }, { new: true, runValidators: true });
     return updatedUserAvatar;
   }
 }
