@@ -1,7 +1,7 @@
-import CardService from '../services/CardService';
+import CardService from '../services/CardService.js';
 
 class CardController {
-  async create(req, res) {
+  static async create(req, res) {
     try {
       const id = req.user._id;
       const card = await CardService.create({ ...req.body, owner: id });
@@ -14,7 +14,7 @@ class CardController {
     }
   }
 
-  async getAll(req, res) {
+  static async getAll(req, res) {
     try {
       const cards = await CardService.getAll();
       return res.json(cards);
@@ -23,7 +23,7 @@ class CardController {
     }
   }
 
-  async removeCard(req, res) {
+  static async removeCard(req, res) {
     try {
       const cards = await CardService.removeCard(req.params.cardId);
 
@@ -40,9 +40,10 @@ class CardController {
     }
   }
 
-  async like(req, res) {
+  static async like(req, res) {
     try {
-      const like = await CardService.like(req.params.cardId, { $addToSet: { likes: req.user._id } });
+      const like = await CardService
+        .like(req.params.cardId, req.user._id);
 
       if (!like) {
         return res.status(404).json({ message: 'Card not found' });
@@ -57,9 +58,10 @@ class CardController {
     }
   }
 
-  async dislike(req, res) {
+  static async dislike(req, res) {
     try {
-      const dislike = await CardService.dislike(req.params.cardId, { $pull: { likes: req.user._id } });
+      const dislike = await CardService
+        .dislike(req.params.cardId, req.user._id);
 
       if (!dislike) {
         return res.status(404).json({ message: 'Incorrect id' });
@@ -75,4 +77,4 @@ class CardController {
   }
 }
 
-export default new CardController();
+export default CardController;

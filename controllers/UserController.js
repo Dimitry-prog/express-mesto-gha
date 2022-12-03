@@ -1,7 +1,7 @@
-import UserService from '../services/UserService';
+import UserService from '../services/UserService.js';
 
 class UserController {
-  async create(req, res) {
+  static async create(req, res) {
     try {
       const user = await UserService.create(req.body);
       return res.json(user);
@@ -13,7 +13,7 @@ class UserController {
     }
   }
 
-  async getAll(req, res) {
+  static async getAll(req, res) {
     try {
       const users = await UserService.getAll();
       return res.json(users);
@@ -22,7 +22,7 @@ class UserController {
     }
   }
 
-  async getSingle(req, res) {
+  static async getSingle(req, res) {
     try {
       const user = await UserService.getSingle(req.params.userId);
 
@@ -39,7 +39,7 @@ class UserController {
     }
   }
 
-  async updateProfile(req, res) {
+  static async updateProfile(req, res) {
     try {
       const updatedProfile = await UserService.updateProfile(req.user._id, req.body);
 
@@ -56,7 +56,7 @@ class UserController {
     }
   }
 
-  async updateAvatar(req, res) {
+  static async updateAvatar(req, res) {
     try {
       const updatedUserAvatar = await UserService.updateAvatar(req.user._id, req.body);
       return res.json(updatedUserAvatar);
@@ -69,4 +69,4 @@ class UserController {
   }
 }
 
-export default new UserController();
+export default UserController;

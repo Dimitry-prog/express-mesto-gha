@@ -1,8 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import userRouter from './routes/UserRouter';
-import cardRouter from './routes/CardRouter';
-import handleErrors from './middlewares/handleErrors';
+import userRouter from './routes/UserRouter.js';
+import cardRouter from './routes/CardRouter.js';
+import handleErrors from './middlewares/handleErrors.js';
 
 const PORT = 3000;
 // const DB_URL = 'mongodb+srv://user:user@cluster0.deipiap.mongodb.net/?retryWrites=true&w=majority';
@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 app.use(userRouter);
 app.use(cardRouter);
 
-app.use('*', (req, res, next) => {
+app.use('*', (req, res) => {
   res.status(404).json({ message: 'DATA FAIL' });
 });
 
@@ -36,9 +36,9 @@ app.use(handleErrors);
 const startApp = async () => {
   try {
     await mongoose.connect(DB_URL, { useUnifiedTopology: true, useNewUrlParser: true });
-    app.listen(PORT, () => console.log(`SERVER WORK AT ${PORT}`));
+    app.listen(PORT, () => console.log('SERVER WORK!!!'));
   } catch (e) {
-    console.log(e);
+    throw new Error('Sever dont work today');
   }
 };
 

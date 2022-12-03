@@ -1,34 +1,32 @@
-import CardModal from '../models/CardModel';
+import CardModal from '../models/CardModel.js';
 
 class CardService {
-  async create(card) {
+  static async create(card) {
     const createCard = await CardModal.create(card);
     return createCard;
   }
 
-  async getAll() {
-    try {
-      const cards = await CardModal.find();
-      return cards;
-    } catch (e) {
-      throw new Error('Something went wrong');
-    }
+  static async getAll() {
+    const cards = await CardModal.find();
+    return cards;
   }
 
-  async removeCard(id) {
+  static async removeCard(id) {
     const card = await CardModal.findByIdAndDelete(id);
     return card;
   }
 
-  async like(id) {
-    const like = await CardModal.findByIdAndUpdate(id, { new: true });
+  static async like(cardId, userId) {
+    const like = await CardModal
+      .findByIdAndUpdate(cardId, { $addToSet: { likes: userId } }, { new: true });
     return like;
   }
 
-  async dislike(id) {
-    const dislike = await CardModal.findByIdAndUpdate(id, { new: true });
+  static async dislike(cardId, userId) {
+    const dislike = await CardModal
+      .findByIdAndUpdate(cardId, { $pull: { likes: userId } }, { new: true });
     return dislike;
   }
 }
 
-export default new CardService();
+export default CardService;
