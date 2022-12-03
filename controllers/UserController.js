@@ -41,7 +41,8 @@ class UserController {
 
   static async updateProfile(req, res) {
     try {
-      const updatedProfile = await UserService.updateProfile(req.user._id, req.body);
+      const { name, about } = req.body;
+      const updatedProfile = await UserService.updateProfile(req.user._id, { name, about });
 
       if (!updatedProfile) {
         return res.status(404).json({ message: 'Not found' });
