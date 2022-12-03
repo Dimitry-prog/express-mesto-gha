@@ -16,9 +16,9 @@ class UserService {
     return user;
   }
 
-  static async updateProfile(id) {
+  static async updateProfile(id, profile) {
     const updatedProfile = await UserModal
-      .findByIdAndUpdate(id, {
+      .findByIdAndUpdate(id, profile, {
         new: true,
         runValidators: true,
       });
