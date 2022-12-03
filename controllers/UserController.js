@@ -40,27 +40,27 @@ class UserController {
     }
   }
 
-  static async updateProfile(req, res) {
-    try {
-      const id = req.user._id;
-      const user = await UserModel
-        .findByIdAndUpdate(id, { name: req.body.name, about: req.body.about }, {
-          new: true,
-          runValidators: true,
-        });
-
-      if (!user) {
-        return res.status(404).json({ message: 'Not found' });
-      }
-
-      return res.json(user);
-    } catch (e) {
-      if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return res.status(400).json({ message: 'Incorrect data' });
-      }
-      return res.status(500).json({ message: 'Server not work' });
-    }
-  }
+  // static async updateProfile(req, res) {
+  //   try {
+  //     const id = req.user._id;
+  //     const user = await UserModel
+  //       .findByIdAndUpdate(id, { name: req.body.name, about: req.body.about }, {
+  //         new: true,
+  //         runValidators: true,
+  //       });
+  //
+  //     if (!user) {
+  //       return res.status(404).json({ message: 'Not found' });
+  //     }
+  //
+  //     return res.json(user);
+  //   } catch (e) {
+  //     if (e.name === 'ValidationError' || e.name === 'CastError') {
+  //       return res.status(400).json({ message: 'Incorrect data' });
+  //     }
+  //     return res.status(500).json({ message: 'Server not work' });
+  //   }
+  // }
 
   static async updateAvatar(req, res) {
     try {
@@ -118,5 +118,27 @@ class UserController {
   //   }
   // }
 }
+
+export const updateProfile = async (req, res) => {
+  try {
+    const id = req.user._id;
+    const user = await UserModel
+      .findByIdAndUpdate(id, { name: req.body.name, about: req.body.about }, {
+        new: true,
+        runValidators: true,
+      });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Not found' });
+    }
+
+    return res.json(user);
+  } catch (e) {
+    if (e.name === 'ValidationError' || e.name === 'CastError') {
+      return res.status(400).json({ message: 'Incorrect data' });
+    }
+    return res.status(500).json({ message: 'Server not work' });
+  }
+};
 
 export default UserController;
