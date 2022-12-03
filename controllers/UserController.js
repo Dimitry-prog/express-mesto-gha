@@ -60,7 +60,7 @@ class UserController {
   static async updateAvatar(req, res) {
     try {
       const updatedUserAvatar = await UserService
-        .updateAvatar(req.user._id, { avatar: req.body.avatar });
+        .updateAvatar(req.user._id, req.body.avatar);
       return res.json(updatedUserAvatar);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
