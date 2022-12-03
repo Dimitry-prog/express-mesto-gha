@@ -1,4 +1,5 @@
 import UserService from '../services/UserService.js';
+import UserModel from '../models/UserModel.js';
 
 class UserController {
   static async create(req, res) {
@@ -41,18 +42,18 @@ class UserController {
 
   static async updateProfile(req, res) {
     try {
-      const { name, about } = req.body;
-      const profile = {
-        name,
-        about,
-      };
-      const updatedProfile = await UserService.updateProfile(req.user._id, profile);
+      const id = req.user._id;
+      const user = await UserModel
+        .findByIdAndUpdate(id, { name: req.body.name, about: req.body.about }, {
+          new: true,
+          runValidators: true,
+        });
 
-      if (!updatedProfile) {
+      if (!user) {
         return res.status(404).json({ message: 'Not found' });
       }
 
-      return res.json(updatedProfile);
+      return res.json(user);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
         return res.status(400).json({ message: 'Incorrect data' });
@@ -63,9 +64,17 @@ class UserController {
 
   static async updateAvatar(req, res) {
     try {
-      const updatedUserAvatar = await UserService
-        .updateAvatar(req.user._id, req.body.avatar);
-      return res.json(updatedUserAvatar);
+      const id = req.user._id;
+      const user = await UserModel.findByIdAndUpdate(id, { avatar: req.body.avatar }, {
+        new: true,
+        runValidators: true,
+      });
+
+      if (!user) {
+        return res.status(404).json({ message: 'Not found' });
+      }
+
+      return res.json(user);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
         return res.status(400).json({ message: 'Incorrect data' });
@@ -73,6 +82,41 @@ class UserController {
       return res.status(500).json({ message: 'Server not work' });
     }
   }
+
+  // static async updateProfile(req, res) {
+  //   try {
+  //     const { name, about } = req.body;
+  //     const profile = {
+  //       name,
+  //       about,
+  //     };
+  //     const updatedProfile = await UserService.updateProfile(req.user._id, profile);
+  //
+  //     if (!updatedProfile) {
+  //       return res.status(404).json({ message: 'Not found' });
+  //     }
+  //
+  //     return res.json(updatedProfile);
+  //   } catch (e) {
+  //     if (e.name === 'ValidationError' || e.name === 'CastError') {
+  //       return res.status(400).json({ message: 'Incorrect data' });
+  //     }
+  //     return res.status(500).json({ message: 'Server not work' });
+  //   }
+  // }
+  //
+  // static async updateAvatar(req, res) {
+  //   try {
+  //     const updatedUserAvatar = await UserService
+  //       .updateAvatar(req.user._id, req.body.avatar);
+  //     return res.json(updatedUserAvatar);
+  //   } catch (e) {
+  //     if (e.name === 'ValidationError' || e.name === 'CastError') {
+  //       return res.status(400).json({ message: 'Incorrect data' });
+  //     }
+  //     return res.status(500).json({ message: 'Server not work' });
+  //   }
+  // }
 }
 
 export default UserController;

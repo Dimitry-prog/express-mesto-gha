@@ -16,20 +16,20 @@ class UserService {
     return user;
   }
 
-  static async updateProfile(id, profile) {
-    const updatedProfile = await UserModal
-      .findByIdAndUpdate(id, profile, {
-        new: true,
-        runValidators: true,
-      });
-    return updatedProfile;
-  }
-
-  static async updateAvatar(id, userAvatar) {
-    const updatedUserAvatar = await UserModal
-      .findByIdAndUpdate(id, { avatar: userAvatar }, { new: true, runValidators: true });
-    return updatedUserAvatar;
-  }
+//   static async updateProfile(id, profile) {
+//     const updatedProfile = await UserModal
+//       .findByIdAndUpdate(id, profile, {
+//         new: true,
+//         runValidators: true,
+//       });
+//     return updatedProfile;
+//   }
+//
+//   static async updateAvatar(id, userAvatar) {
+//     const updatedUserAvatar = await UserModal
+//       .findByIdAndUpdate(id, { avatar: userAvatar }, { new: true, runValidators: true });
+//     return updatedUserAvatar;
+//   }
 }
 
 export default UserService;
