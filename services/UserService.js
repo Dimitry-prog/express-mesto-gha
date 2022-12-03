@@ -24,9 +24,9 @@ class UserService {
     return updatedProfile;
   }
 
-  static async updateAvatar(id, avatar) {
+  static async updateAvatar(id, { avatar }) {
     const updatedUserAvatar = await UserModal
-      .findByIdAndUpdate(id, avatar, { new: true, runValidators: true });
+      .findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true });
     return updatedUserAvatar;
   }
 }
