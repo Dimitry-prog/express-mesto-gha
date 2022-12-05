@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import UserService from '../services/UserService.js';
 
 class UserController {
@@ -39,49 +40,6 @@ class UserController {
     }
   }
 
-  // static async updateProfile(req, res) {
-  //   try {
-  //     const id = req.user._id;
-  //     const user = await UserModel
-  //       .findByIdAndUpdate(id, { name: req.body.name, about: req.body.about }, {
-  //         new: true,
-  //         runValidators: true,
-  //       });
-  //
-  //     if (!user) {
-  //       return res.status(404).json({ message: 'Not found' });
-  //     }
-  //
-  //     return res.json(user);
-  //   } catch (e) {
-  //     if (e.name === 'ValidationError' || e.name === 'CastError') {
-  //       return res.status(400).json({ message: 'Incorrect data' });
-  //     }
-  //     return res.status(500).json({ message: 'Server not work' });
-  //   }
-  // }
-  //
-  // static async updateAvatar(req, res) {
-  //   try {
-  //     const id = req.user._id;
-  //     const user = await UserModel.findByIdAndUpdate(id, { avatar: req.body.avatar }, {
-  //       new: true,
-  //       runValidators: true,
-  //     });
-  //
-  //     if (!user) {
-  //       return res.status(404).json({ message: 'Not found' });
-  //     }
-  //
-  //     return res.json(user);
-  //   } catch (e) {
-  //     if (e.name === 'ValidationError' || e.name === 'CastError') {
-  //       return res.status(400).json({ message: 'Incorrect data' });
-  //     }
-  //     return res.status(500).json({ message: 'Server not work' });
-  //   }
-  // }
-
   static async updateProfile(req, res) {
     try {
       const { name, about } = req.body;
@@ -114,6 +72,63 @@ class UserController {
       }
 
       return res.json(updatedUserAvatar);
+    } catch (e) {
+      if (e.name === 'ValidationError' || e.name === 'CastError') {
+        return res.status(400).json({ message: 'Incorrect data' });
+      }
+      return res.status(500).json({ message: 'Server not work' });
+    }
+  }
+
+  static async login(req, res) {
+    try {
+      const { email, password } = req.body;
+      const authUser = await UserService.findUserByCredentials(email, password);
+
+      if (!authUser) {
+        return res.status(401).json({ message: 'PASSWORD' });
+      }
+
+      return res.send({
+        token: jwt.sign({ _id: authUser._id }, 'secret', { expiresIn: '7d' }),
+      });
+    } catch (e) {
+      if (e.name === 'ValidationError' || e.name === 'CastError') {
+        return res.status(400).json({ message: 'Incorrect data' });
+      }
+      return res.status(500).json({ message: 'Server not work' });
+    }
+  }
+
+  static async register(req, res) {
+    try {
+      const hash = await UserService.hashPassword(req.body.password);
+      const user = await UserService.create({
+        email: req.body.email,
+        password: hash,
+      });
+      return res.status(201).json({
+        _id: user._id,
+        email: user.email,
+      });
+    } catch (e) {
+      if (e.name === 'ValidationError' || e.name === 'CastError') {
+        return res.status(400).json({ message: 'Incorrect data' });
+      }
+      return res.status(500).json({ message: 'Server not work' });
+    }
+  }
+
+  static async getUserInfo(req, res) {
+    try {
+      console.log(req.body);
+      const userInfo = await UserService.getUserInfo(req.user._id);
+
+      if (!userInfo) {
+        return res.status(404).json({ message: 'Not found' });
+      }
+
+      return res.json(userInfo);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
         return res.status(400).json({ message: 'Incorrect data' });

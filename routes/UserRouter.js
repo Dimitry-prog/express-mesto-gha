@@ -5,8 +5,9 @@ const router = new Router();
 
 router.get('/users', UserController.getAll);
 router.get('/users/:userId', UserController.getSingle);
-router.post('/users', UserController.create);
+// router.post('/users', UserController.create);
 router.patch('/users/me', UserController.updateProfile);
+router.get('/users/me', UserController.getUserInfo);
 router.patch('/users/me/avatar', UserController.updateAvatar);
 
 export default router;

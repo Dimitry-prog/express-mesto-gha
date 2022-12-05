@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import userRouter from './routes/UserRouter.js';
 import cardRouter from './routes/CardRouter.js';
+import UserController from './controllers/UserController.js';
 // import handleErrors from './middlewares/handleErrors.js';
 
 const PORT = 3000;
@@ -16,13 +17,18 @@ app.use(express.urlencoded({
   extended: true,
 }));
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '637d01b9770881fcf5dc23c2',
-  };
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: '637d01b9770881fcf5dc23c2',
+//   };
+//
+//   next();
+// });
 
-  next();
-});
+app.post('/signup', UserController.register);
+app.post('/signin', UserController.login);
+
+// app.use(handleAuthUser);
 
 app.use(userRouter);
 app.use(cardRouter);
@@ -35,7 +41,12 @@ app.use('*', (req, res) => {
 
 const startApp = async () => {
   try {
-    await mongoose.connect(DB_URL, { useUnifiedTopology: true, useNewUrlParser: true });
+    await mongoose.connect(DB_URL, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      // useCreateIndex: true,
+      // useFindAndModify: false,
+    });
     app.listen(PORT, () => console.log('SERVER WORK!!!'));
   } catch (e) {
     throw new Error('Sever dont work today');
