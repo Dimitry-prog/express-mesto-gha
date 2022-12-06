@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 const handleAuthUser = (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization) {
+  if (!authorization || !authorization.startsWith('Bearer ')) {
     throw new Error({ message: 'Need authorization' });
   }
 

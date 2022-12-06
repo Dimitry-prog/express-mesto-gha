@@ -88,7 +88,6 @@ class UserController {
       if (!authUser) {
         return res.status(401).json({ message: 'PASSWORD' });
       }
-
       return res.send({
         token: jwt.sign({ _id: authUser._id }, 'secret', { expiresIn: '7d' }),
       });
@@ -121,7 +120,6 @@ class UserController {
 
   static async getUserInfo(req, res) {
     try {
-      console.log(req.body);
       const userInfo = await UserService.getUserInfo(req.user._id);
 
       if (!userInfo) {

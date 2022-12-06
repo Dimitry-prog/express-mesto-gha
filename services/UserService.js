@@ -33,7 +33,7 @@ class UserService {
   }
 
   static async findUserByCredentials(email, password) {
-    const findUser = await UserModel.find({ email });
+    const findUser = await UserModel.findOne({ email });
     const checkPassword = await bcrypt.compare(password, findUser.password);
     if (!checkPassword) {
       throw new Error({ message: 'Not valid password' });
