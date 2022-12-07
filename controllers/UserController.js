@@ -67,7 +67,7 @@ class UserController {
   static async updateAvatar(req, res) {
     try {
       const updatedUserAvatar = await UserService
-        .updateAvatar(req.user._id, req.body.avatar);
+        .updateAvatar(req.user._id, req.body.avatar).validate();
 
       if (!updatedUserAvatar) {
         return res.status(404).json({ message: 'Not found' });

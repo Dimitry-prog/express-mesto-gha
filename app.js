@@ -9,7 +9,7 @@ import rateLimit from 'express-rate-limit';
 import userRouter from './routes/UserRouter.js';
 import cardRouter from './routes/CardRouter.js';
 import UserController from './controllers/UserController.js';
-import handleAuthUser from './middlewares/authUser.js';
+import handleAuthUser from './middlewares/handleAuthUser.js';
 // import handleErrors from './middlewares/handleErrors.js';
 
 dotenv.config();
@@ -48,12 +48,17 @@ app.post('/signup', celebrate({
       .default('Dimitry')),
     about: escape(Joi.string().trim().min(2).max(30)
       .default('frontend')),
-    avatar: escape(Joi.string().trim().default('https://www.lifesavvy.com/p/uploads/2020/10/269d4e5a.jpg?height=200p&trim=2,2,2,2')),
+    avatar: escape(Joi.string().trim().pattern(
+      new RegExp('(^https?:\\/\\/[w{3}]?.?[a-zA-z0-9-]{1,}[\\.\\w{2,}]*)[\\/\\w{1,}]*'),
+    ).default('https://www.lifesavvy.com/p/uploads/2020/10/269d4e5a.jpg?height=200p&trim=2,2,2,2')),
     email: escape(Joi.string().trim().required().email()),
     password: escape(Joi.string().trim().required().min(8)),
   }),
 }), UserController.register);
 app.post('/signin', celebrate({
+  headers: Joi.object({
+    token: escape(Joi.string().required()),
+  }).unknown(true),
   body: Joi.object().keys({
     email: escape(Joi.string().trim().required().email()),
     password: escape(Joi.string().trim().required().min(8)),
@@ -88,3 +93,7 @@ const startApp = async () => {
 };
 
 startApp();
+
+// const regExp = /^https?:\/\/w{3}?.?[a-zA-z0-9]\.\w{2,}/g;
+// const regExp2 = /^https?:\/\/[w{3}]?.?[a-zA-z0-9-]{1,}\.\w{2,}/g;
+// const regExp3 = /(^https?:\/\/[w{3}]?.?[a-zA-z0-9-]{1,}[\.\w{2,}]+)[\/\w{1,}]{1,}+/g;
