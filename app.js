@@ -1,9 +1,18 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import { celebrate, errors, Joi } from 'celebrate';
+import escape from 'escape-html';
+import * as dotenv from 'dotenv';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+
 import userRouter from './routes/UserRouter.js';
 import cardRouter from './routes/CardRouter.js';
 import UserController from './controllers/UserController.js';
+import handleAuthUser from './middlewares/authUser.js';
 // import handleErrors from './middlewares/handleErrors.js';
+
+dotenv.config();
 
 const PORT = 3000;
 // const DB_URL = 'mongodb+srv://user:user@cluster0.deipiap.mongodb.net/?retryWrites=true&w=majority';
@@ -12,10 +21,18 @@ const DB_URL = 'mongodb://localhost:27017/mestodb';
 
 const app = express();
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
+app.use(helmet());
+app.use(limiter);
+
 app.use(express.json());
-app.use(express.urlencoded({
-  extended: true,
-}));
+// app.use(express.urlencoded({
+//   extended: true,
+// }));
 
 // app.use((req, res, next) => {
 //   req.user = {
@@ -25,13 +42,30 @@ app.use(express.urlencoded({
 //   next();
 // });
 
-app.post('/signup', UserController.register);
-app.post('/signin', UserController.login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: escape(Joi.string().trim().min(2).max(30)
+      .default('Dimitry')),
+    about: escape(Joi.string().trim().min(2).max(30)
+      .default('frontend')),
+    avatar: escape(Joi.string().trim().default('https://www.lifesavvy.com/p/uploads/2020/10/269d4e5a.jpg?height=200p&trim=2,2,2,2')),
+    email: escape(Joi.string().trim().required().email()),
+    password: escape(Joi.string().trim().required().min(8)),
+  }),
+}), UserController.register);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: escape(Joi.string().trim().required().email()),
+    password: escape(Joi.string().trim().required().min(8)),
+  }),
+}), UserController.login);
 
-// app.use(handleAuthUser);
+app.use(handleAuthUser);
 
 app.use(userRouter);
 app.use(cardRouter);
+
+app.use(errors());
 
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'DATA FAIL' });

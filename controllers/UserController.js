@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
 import UserService from '../services/UserService.js';
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 class UserController {
   static async create(req, res) {
     try {
@@ -88,8 +90,20 @@ class UserController {
       if (!authUser) {
         return res.status(401).json({ message: 'PASSWORD' });
       }
+
+      const token = jwt.sign(
+        { _id: authUser._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' },
+      );
+
+      res.cookie('jwt', token, {
+        maxAge: 3600000,
+        httpOnly: true,
+      });
+
       return res.send({
-        token: jwt.sign({ _id: authUser._id }, 'secret', { expiresIn: '7d' }),
+        token,
       });
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {

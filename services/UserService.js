@@ -47,7 +47,7 @@ class UserService {
   }
 
   static async getUserInfo(id) {
-    const userInfo = await UserModel.findById(id);
+    const userInfo = await UserModel.findOne({ _id: id });
     return userInfo;
   }
 }
