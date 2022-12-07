@@ -1,20 +1,21 @@
 import jwt from 'jsonwebtoken';
 import UserService from '../services/UserService.js';
+import ApiError from '../errors/ApiError.js';
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 class UserController {
-  static async create(req, res) {
-    try {
-      const user = await UserService.create(req.body);
-      return res.json(user);
-    } catch (e) {
-      if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return res.status(400).json({ message: 'Incorrect data' });
-      }
-      return res.status(500).json({ message: 'Server not work' });
-    }
-  }
+  // static async create(req, res) {
+  //   try {
+  //     const user = await UserService.create(req.body);
+  //     return res.json(user);
+  //   } catch (e) {
+  //     if (e.name === 'ValidationError' || e.name === 'CastError') {
+  //       return res.status(400).json({ message: 'Incorrect data' });
+  //     }
+  //     return res.status(500).json({ message: 'Server not work' });
+  //   }
+  // }
 
   static async getAll(req, res) {
     try {
@@ -30,13 +31,13 @@ class UserController {
       const user = await UserService.getSingle(req.params.userId);
 
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return ApiError.notFound('User not found');
       }
 
       return res.json(user);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return res.status(400).json({ message: 'Incorrect data' });
+        return ApiError.badRequest('Incorrect data');
       }
       return res.status(500).json({ message: 'Server not work' });
     }
@@ -52,13 +53,13 @@ class UserController {
       const updatedProfile = await UserService.updateProfile(req.user._id, profile);
 
       if (!updatedProfile) {
-        return res.status(404).json({ message: 'Not found' });
+        return ApiError.notFound('Profile not found');
       }
 
       return res.json(updatedProfile);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return res.status(400).json({ message: 'Incorrect data' });
+        return ApiError.badRequest('Incorrect data');
       }
       return res.status(500).json({ message: 'Server not work' });
     }
@@ -70,13 +71,13 @@ class UserController {
         .updateAvatar(req.user._id, req.body.avatar).validate();
 
       if (!updatedUserAvatar) {
-        return res.status(404).json({ message: 'Not found' });
+        return ApiError.notFound('Avatar not found');
       }
 
       return res.json(updatedUserAvatar);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return res.status(400).json({ message: 'Incorrect data' });
+        return ApiError.badRequest('Incorrect data');
       }
       return res.status(500).json({ message: 'Server not work' });
     }
@@ -88,7 +89,7 @@ class UserController {
       const authUser = await UserService.findUserByCredentials(email, password);
 
       if (!authUser) {
-        return res.status(401).json({ message: 'PASSWORD' });
+        return ApiError.requiredAuth('Authorization required');
       }
 
       const token = jwt.sign(
@@ -107,7 +108,7 @@ class UserController {
       });
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return res.status(400).json({ message: 'Incorrect data' });
+        return ApiError.badRequest('Incorrect data');
       }
       return res.status(500).json({ message: 'Server not work' });
     }
@@ -126,7 +127,7 @@ class UserController {
       });
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return res.status(400).json({ message: 'Incorrect data' });
+        return ApiError.badRequest('Incorrect data');
       }
       return res.status(500).json({ message: 'Server not work' });
     }
@@ -137,13 +138,13 @@ class UserController {
       const userInfo = await UserService.getUserInfo(req.user._id);
 
       if (!userInfo) {
-        return res.status(404).json({ message: 'Not found' });
+        return ApiError.notFound('User profile not found');
       }
 
       return res.json(userInfo);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return res.status(400).json({ message: 'Incorrect data' });
+        return ApiError.badRequest('Incorrect data');
       }
       return res.status(500).json({ message: 'Server not work' });
     }

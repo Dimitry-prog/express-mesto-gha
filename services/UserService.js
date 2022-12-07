@@ -1,11 +1,12 @@
 import bcrypt from 'bcryptjs';
 import UserModel from '../models/UserModel.js';
+import ApiError from '../errors/ApiError.js';
 
 class UserService {
-  static async create(user) {
-    const createUser = await UserModel.create(user);
-    return createUser;
-  }
+  // static async create(user) {
+  //   const createUser = await UserModel.create(user);
+  //   return createUser;
+  // }
 
   static async getAll() {
     const users = await UserModel.find();
@@ -36,7 +37,7 @@ class UserService {
     const findUser = await UserModel.findOne({ email });
     const checkPassword = await bcrypt.compare(password, findUser.password);
     if (!checkPassword) {
-      throw new Error({ message: 'Not valid password' });
+      return ApiError.requiredAuth('Authorization required');
     }
     return findUser;
   }

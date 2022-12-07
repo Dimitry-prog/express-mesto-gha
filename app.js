@@ -10,7 +10,7 @@ import userRouter from './routes/UserRouter.js';
 import cardRouter from './routes/CardRouter.js';
 import UserController from './controllers/UserController.js';
 import handleAuthUser from './middlewares/handleAuthUser.js';
-// import handleErrors from './middlewares/handleErrors.js';
+import handleErrors from './middlewares/handleErrors.js';
 
 dotenv.config();
 
@@ -49,7 +49,7 @@ app.post('/signup', celebrate({
     about: escape(Joi.string().trim().min(2).max(30)
       .default('frontend')),
     avatar: escape(Joi.string().trim().pattern(
-      new RegExp('(^https?:\\/\\/[w{3}]?.?[a-zA-z0-9-]{1,}[\\.\\w{2,}]*)[\\/\\w{1,}]*'),
+      /(^https?:\/\/[w{3}]?.?[a-zA-z0-9-]{1,}[\.\w{2,}]*)[\/\w{1,}]*/,
     ).default('https://www.lifesavvy.com/p/uploads/2020/10/269d4e5a.jpg?height=200p&trim=2,2,2,2')),
     email: escape(Joi.string().trim().required().email()),
     password: escape(Joi.string().trim().required().min(8)),
@@ -76,7 +76,7 @@ app.use('*', (req, res) => {
   res.status(404).json({ message: 'DATA FAIL' });
 });
 
-// app.use(handleErrors);
+app.use(handleErrors);
 
 const startApp = async () => {
   try {

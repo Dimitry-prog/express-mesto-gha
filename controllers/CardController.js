@@ -1,4 +1,5 @@
 import CardService from '../services/CardService.js';
+import ApiError from '../errors/ApiError.js';
 
 class CardController {
   static async create(req, res) {
@@ -8,7 +9,7 @@ class CardController {
       return res.json(card);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return res.status(400).json({ message: 'Incorrect data' });
+        return ApiError.badRequest('Incorrect data');
       }
       return res.status(500).json({ message: 'Server not work' });
     }
@@ -28,13 +29,13 @@ class CardController {
       const cards = await CardService.removeCard(req.params.cardId);
 
       if (!cards) {
-        return res.status(404).json({ message: 'Card not found' });
+        return ApiError.notFound('Card not found');
       }
 
       return res.json(cards);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return res.status(400).json({ message: 'Incorrect data' });
+        return ApiError.badRequest('Incorrect data');
       }
       return res.status(500).json({ message: 'Server not work' });
     }
@@ -46,13 +47,13 @@ class CardController {
         .like(req.params.cardId, req.user._id);
 
       if (!like) {
-        return res.status(404).json({ message: 'Card not found' });
+        return ApiError.notFound('Card like not found');
       }
 
       return res.json(like);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return res.status(400).json({ message: 'Incorrect data' });
+        return ApiError.badRequest('Incorrect data');
       }
       return res.status(500).json({ message: 'Server not work' });
     }
@@ -64,13 +65,13 @@ class CardController {
         .dislike(req.params.cardId, req.user._id);
 
       if (!dislike) {
-        return res.status(404).json({ message: 'Incorrect id' });
+        return ApiError.notFound('Card dislake not found');
       }
 
       return res.json(dislike);
     } catch (e) {
       if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return res.status(400).json({ message: 'Incorrect data' });
+        return ApiError.badRequest('Incorrect data');
       }
       return res.status(500).json({ message: 'Server not work' });
     }
