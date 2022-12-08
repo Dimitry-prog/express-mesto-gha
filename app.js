@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { errors } from 'celebrate';
 import * as dotenv from 'dotenv';
 import helmet from 'helmet';
-import UserController from './controllers/UserController.js';
+import { loginUser, registerUser } from './controllers/UserController.js';
 import handleErrors from './middlewares/handleErrors.js';
 import { limiter } from './utils/constants.js';
 import appRouter from './routes/index.js';
@@ -23,8 +23,8 @@ app.use(limiter);
 
 app.use(express.json());
 
-app.post('/signup', validationQuerySignup, UserController.register);
-app.post('/signin', validationQuerySignin, UserController.login);
+app.post('/signup', validationQuerySignup, registerUser);
+app.post('/signin', validationQuerySignin, loginUser);
 
 // app.use(handleAuthUser);
 
