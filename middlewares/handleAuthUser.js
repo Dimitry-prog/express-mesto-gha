@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import ApiError from '../errors/ApiError.js';
+import RequiredAuth from '../errors/RequiredAuth.js';
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -7,7 +7,7 @@ const handleAuthUser = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return ApiError.requiredAuth('Authorization required');
+    throw new RequiredAuth('Authorization required');
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -19,7 +19,7 @@ const handleAuthUser = (req, res, next) => {
       NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
     );
   } catch (e) {
-    return ApiError.requiredAuth('Authorization required');
+    throw new RequiredAuth('Authorization required');
   }
 
   req.user = payload;

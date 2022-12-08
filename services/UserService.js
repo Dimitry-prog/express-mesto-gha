@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import UserModel from '../models/UserModel.js';
-import ApiError from '../errors/ApiError.js';
+import RequiredAuth from '../errors/RequiredAuth.js';
 
 class UserService {
   // static async create(user) {
@@ -37,7 +37,7 @@ class UserService {
     const findUser = await UserModel.findOne({ email });
     const checkPassword = await bcrypt.compare(password, findUser.password);
     if (!checkPassword) {
-      return ApiError.requiredAuth('Authorization required');
+      throw new RequiredAuth('Authorization required');
     }
     return findUser;
   }

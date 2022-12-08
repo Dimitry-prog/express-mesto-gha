@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
+import { regExpForLink } from '../utils/constants.js';
 
-const regExp = /(^https?:\/\/[w{3}]?.?[a-zA-z0-9-]{1,}[\.\w{2,}]*)[\/\w{1,}]*/g;
-
-const UserModel = new mongoose.Schema({
+const userModel = new mongoose.Schema({
   name: {
     type: String,
     minLength: 2,
@@ -20,7 +19,7 @@ const UserModel = new mongoose.Schema({
     imageURL: String,
     validate: {
       validator(v) {
-        return regExp.test(v);
+        return regExpForLink.test(v);
       },
       message: (props) => `${props.value} is not valid link!`,
     },
@@ -33,9 +32,9 @@ const UserModel = new mongoose.Schema({
   },
   password: {
     type: String,
-    minLength: 8,
     required: true,
+    select: false,
   },
 });
 
-export default mongoose.model('UserModel', UserModel);
+export default mongoose.model('userModel', userModel);

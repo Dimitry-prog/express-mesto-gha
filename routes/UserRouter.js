@@ -3,11 +3,11 @@ import UserController from '../controllers/UserController.js';
 
 const router = new Router();
 
-router.get('/users', UserController.getAll);
-router.get('/users/:userId', UserController.getSingle);
+router.get('/', UserController.getAll);
+router.get('/:userId', UserController.getSingle);
 // router.post('/users', UserController.create);
-router.get('/users/me', UserController.getUserInfo);
-router.patch('/users/me', UserController.updateProfile);
-router.patch('/users/me/avatar', UserController.updateAvatar);
+// router.get('/me', UserController.getUserInfo);
+router.patch('/me', UserController.updateProfile);
+router.patch('/me/avatar', UserController.updateAvatar);
 
 export default router;

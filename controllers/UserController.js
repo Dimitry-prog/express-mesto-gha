@@ -1,49 +1,40 @@
 import jwt from 'jsonwebtoken';
 import UserService from '../services/UserService.js';
-import ApiError from '../errors/ApiError.js';
+import NotFoundError from '../errors/NotFoundError .js';
+import BadRequest from '../errors/BadRequest.js';
+import RequiredAuth from '../errors/RequiredAuth.js';
+import ExistUser from '../errors/ExistUser.js';
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 class UserController {
-  // static async create(req, res) {
-  //   try {
-  //     const user = await UserService.create(req.body);
-  //     return res.json(user);
-  //   } catch (e) {
-  //     if (e.name === 'ValidationError' || e.name === 'CastError') {
-  //       return res.status(400).json({ message: 'Incorrect data' });
-  //     }
-  //     return res.status(500).json({ message: 'Server not work' });
-  //   }
-  // }
-
-  static async getAll(req, res) {
+  static async getAll(req, res, next) {
     try {
       const users = await UserService.getAll();
       return res.json(users);
     } catch (e) {
-      return res.status(500).json({ message: e.message });
+      next(e);
     }
   }
 
-  static async getSingle(req, res) {
+  static async getSingle(req, res, next) {
     try {
       const user = await UserService.getSingle(req.params.userId);
 
       if (!user) {
-        return ApiError.notFound('User not found');
+        throw new NotFoundError('User not found');
       }
 
       return res.json(user);
     } catch (e) {
-      if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return ApiError.badRequest('Incorrect data');
+      if (e.name === 'CastError') {
+        throw new BadRequest();
       }
-      return res.status(500).json({ message: 'Server not work' });
+      next(e);
     }
   }
 
-  static async updateProfile(req, res) {
+  static async updateProfile(req, res, next) {
     try {
       const { name, about } = req.body;
       const profile = {
@@ -53,43 +44,43 @@ class UserController {
       const updatedProfile = await UserService.updateProfile(req.user._id, profile);
 
       if (!updatedProfile) {
-        return ApiError.notFound('Profile not found');
+        throw new NotFoundError('Profile not found');
       }
 
       return res.json(updatedProfile);
     } catch (e) {
-      if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return ApiError.badRequest('Incorrect data');
+      if (e.name === 'ValidationError') {
+        throw new BadRequest();
       }
-      return res.status(500).json({ message: 'Server not work' });
+      next(e);
     }
   }
 
-  static async updateAvatar(req, res) {
+  static async updateAvatar(req, res, next) {
     try {
       const updatedUserAvatar = await UserService
         .updateAvatar(req.user._id, req.body.avatar).validate();
 
       if (!updatedUserAvatar) {
-        return ApiError.notFound('Avatar not found');
+        throw new NotFoundError('Avatar not found');
       }
 
       return res.json(updatedUserAvatar);
     } catch (e) {
-      if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return ApiError.badRequest('Incorrect data');
+      if (e.name === 'ValidationError') {
+        throw new BadRequest();
       }
-      return res.status(500).json({ message: 'Server not work' });
+      next(e);
     }
   }
 
-  static async login(req, res) {
+  static async login(req, res, next) {
     try {
       const { email, password } = req.body;
       const authUser = await UserService.findUserByCredentials(email, password);
 
       if (!authUser) {
-        return ApiError.requiredAuth('Authorization required');
+        throw new RequiredAuth('Authorization required');
       }
 
       const token = jwt.sign(
@@ -98,57 +89,59 @@ class UserController {
         { expiresIn: '7d' },
       );
 
-      res.cookie('jwt', token, {
+      return res.cookie('jwt', token, {
         maxAge: 3600000,
         httpOnly: true,
       });
-
-      return res.send({
-        token,
-      });
     } catch (e) {
-      if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return ApiError.badRequest('Incorrect data');
+      if (e.name === 'ValidationError') {
+        throw new BadRequest();
       }
-      return res.status(500).json({ message: 'Server not work' });
+      next(e);
     }
   }
 
-  static async register(req, res) {
+  static async register(req, res, next) {
     try {
+      const {
+        name, about, avatar, email,
+      } = req.body;
       const hash = await UserService.hashPassword(req.body.password);
       const user = await UserService.create({
-        email: req.body.email,
+        name,
+        about,
+        avatar,
+        email,
         password: hash,
       });
-      return res.status(201).json({
-        _id: user._id,
-        email: user.email,
-      });
+      return res.status(201).json(user);
     } catch (e) {
-      if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return ApiError.badRequest('Incorrect data');
+      if (e.name === 'ValidationError') {
+        throw new BadRequest();
       }
-      return res.status(500).json({ message: 'Server not work' });
+      if (e.code === 11000) {
+        throw new ExistUser('You already registered, please login instead');
+      }
+      next(e);
     }
   }
 
-  static async getUserInfo(req, res) {
-    try {
-      const userInfo = await UserService.getUserInfo(req.user._id);
-
-      if (!userInfo) {
-        return ApiError.notFound('User profile not found');
-      }
-
-      return res.json(userInfo);
-    } catch (e) {
-      if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return ApiError.badRequest('Incorrect data');
-      }
-      return res.status(500).json({ message: 'Server not work' });
-    }
-  }
+  // static async getUserInfo(req, res, next) {
+  //   try {
+  //     const userInfo = await UserService.getUserInfo(req.user._id);
+  //
+  //     if (!userInfo) {
+  //       throw new NotFoundError('User profile not found');
+  //     }
+  //
+  //     return res.json(userInfo);
+  //   } catch (e) {
+  //     if (e.name === 'CastError') {
+  //       throw new BadRequest();
+  //     }
+  //     next(e);
+  //   }
+  // }
 }
 
 export default UserController;

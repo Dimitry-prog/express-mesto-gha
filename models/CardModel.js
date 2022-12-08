@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { regExpForLink } from '../utils/constants.js';
 
-const CardModel = new mongoose.Schema({
+const cardModel = new mongoose.Schema({
   name: {
     type: String,
     minLength: 2,
@@ -10,15 +11,21 @@ const CardModel = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: {
+      validator(v) {
+        return regExpForLink.test(v);
+      },
+      message: (props) => `${props.value} is not valid link!`,
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'UserModel',
+    ref: 'userModel',
     required: true,
   },
   likes: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'UserModel',
+    ref: 'userModel',
     default: [],
   },
   createdAt: {
@@ -27,4 +34,4 @@ const CardModel = new mongoose.Schema({
   },
 });
 
-export default mongoose.model('CardModel', CardModel);
+export default mongoose.model('cardModel', cardModel);

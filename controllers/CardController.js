@@ -1,30 +1,31 @@
 import CardService from '../services/CardService.js';
 import ApiError from '../errors/ApiError.js';
+import BadRequest from '../errors/BadRequest.js';
 
 class CardController {
-  static async create(req, res) {
+  static async create(req, res, next) {
     try {
       const id = req.user._id;
       const card = await CardService.create({ ...req.body, owner: id });
       return res.json(card);
     } catch (e) {
-      if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return ApiError.badRequest('Incorrect data');
+      if (e.name === 'ValidationError') {
+        throw new BadRequest();
       }
-      return res.status(500).json({ message: 'Server not work' });
+      next(e);
     }
   }
 
-  static async getAll(req, res) {
+  static async getAll(req, res, next) {
     try {
       const cards = await CardService.getAll();
       return res.json(cards);
     } catch (e) {
-      return res.status(500).json({ message: e.message });
+      next(e);
     }
   }
 
-  static async removeCard(req, res) {
+  static async removeCard(req, res, next) {
     try {
       const cards = await CardService.removeCard(req.params.cardId);
 
@@ -34,14 +35,14 @@ class CardController {
 
       return res.json(cards);
     } catch (e) {
-      if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return ApiError.badRequest('Incorrect data');
+      if (e.name === 'CastError') {
+        throw new BadRequest();
       }
-      return res.status(500).json({ message: 'Server not work' });
+      next(e);
     }
   }
 
-  static async like(req, res) {
+  static async like(req, res, next) {
     try {
       const like = await CardService
         .like(req.params.cardId, req.user._id);
@@ -52,14 +53,14 @@ class CardController {
 
       return res.json(like);
     } catch (e) {
-      if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return ApiError.badRequest('Incorrect data');
+      if (e.name === 'CastError') {
+        throw new BadRequest();
       }
-      return res.status(500).json({ message: 'Server not work' });
+      next(e);
     }
   }
 
-  static async dislike(req, res) {
+  static async dislike(req, res, next) {
     try {
       const dislike = await CardService
         .dislike(req.params.cardId, req.user._id);
@@ -70,10 +71,10 @@ class CardController {
 
       return res.json(dislike);
     } catch (e) {
-      if (e.name === 'ValidationError' || e.name === 'CastError') {
-        return ApiError.badRequest('Incorrect data');
+      if (e.name === 'CastError') {
+        throw new BadRequest();
       }
-      return res.status(500).json({ message: 'Server not work' });
+      next(e);
     }
   }
 }
