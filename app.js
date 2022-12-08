@@ -8,6 +8,7 @@ import handleErrors from './middlewares/handleErrors.js';
 import { limiter } from './utils/constants.js';
 import appRouter from './routes/index.js';
 import { validationQuerySignin, validationQuerySignup } from './helpers/validationQuery.js';
+import handleAuthUser from './middlewares/handleAuthUser.js';
 
 dotenv.config();
 
