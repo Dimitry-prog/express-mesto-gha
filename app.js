@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { errors } from 'celebrate';
 import * as dotenv from 'dotenv';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 import { loginUser, registerUser } from './controllers/UserController.js';
 import handleErrors from './middlewares/handleErrors.js';
 import { limiter } from './utils/constants.js';
@@ -21,7 +22,7 @@ const app = express();
 
 app.use(helmet());
 app.use(limiter);
-
+app.use(cookieParser());
 app.use(express.json());
 
 app.post('/signup', validationQuerySignup, registerUser);
