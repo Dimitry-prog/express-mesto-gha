@@ -7,7 +7,7 @@ class CardService {
   }
 
   static async getAll() {
-    const cards = await CardModel.find();
+    const cards = await CardModel.find().populate(['owner', 'likes']);
     return cards;
   }
 
@@ -18,13 +18,13 @@ class CardService {
 
   static async like(cardId, userId) {
     const like = await CardModel
-      .findByIdAndUpdate(cardId, { $addToSet: { likes: userId } }, { new: true });
+      .findByIdAndUpdate(cardId, { $addToSet: { likes: userId } }, { new: true }).populate(['owner', 'likes']);
     return like;
   }
 
   static async dislike(cardId, userId) {
     const dislike = await CardModel
-      .findByIdAndUpdate(cardId, { $pull: { likes: userId } }, { new: true });
+      .findByIdAndUpdate(cardId, { $pull: { likes: userId } }, { new: true }).populate(['likes']);
     return dislike;
   }
 }

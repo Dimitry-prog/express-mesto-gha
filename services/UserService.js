@@ -1,12 +1,12 @@
 import bcrypt from 'bcryptjs';
 import UserModel from '../models/UserModel.js';
-import RequiredAuth from '../errors/RequiredAuth.js';
+import RequiredAuthError from '../errors/RequiredAuthError.js';
 
 class UserService {
-  // static async create(user) {
-  //   const createUser = await UserModel.create(user);
-  //   return createUser;
-  // }
+  static async create(user) {
+    const createUser = await UserModel.create(user);
+    return createUser;
+  }
 
   static async getAll() {
     const users = await UserModel.find();
@@ -34,10 +34,10 @@ class UserService {
   }
 
   static async findUserByCredentials(email, password) {
-    const findUser = await UserModel.findOne({ email });
+    const findUser = await UserModel.findOne({ email }).select('+password');
     const checkPassword = await bcrypt.compare(password, findUser.password);
     if (!checkPassword) {
-      throw new RequiredAuth('Authorization required');
+      throw new RequiredAuthError('Authorization required');
     }
     return findUser;
   }
@@ -47,10 +47,10 @@ class UserService {
     return hashingPasswod;
   }
 
-  static async getUserInfo(id) {
-    const userInfo = await UserModel.findOne({ _id: id });
-    return userInfo;
-  }
+  // static async getUserInfo(id) {
+  //   const userInfo = await UserModel.findOne({ _id: id });
+  //   return userInfo;
+  // }
 }
 
 export default UserService;

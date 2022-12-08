@@ -1,15 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { celebrate, errors, Joi } from 'celebrate';
+import { errors } from 'celebrate';
 import * as dotenv from 'dotenv';
 import helmet from 'helmet';
-
-import userRouter from './routes/UserRouter.js';
-import cardRouter from './routes/CardRouter.js';
 import UserController from './controllers/UserController.js';
-import handleAuthUser from './middlewares/handleAuthUser.js';
 import handleErrors from './middlewares/handleErrors.js';
-import { limiter, regExpForLink } from './utils/constants.js';
+import { limiter } from './utils/constants.js';
+import appRouter from './routes/index.js';
+import { validationQuerySignin, validationQuerySignup } from './helpers/validationQuery.js';
 
 dotenv.config();
 
@@ -25,28 +23,12 @@ app.use(limiter);
 
 app.use(express.json());
 
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().trim().min(2).max(30)
-      .default('Dimitry'),
-    about: Joi.string().trim().min(2).max(30)
-      .default('frontend'),
-    avatar: Joi.string().trim().pattern(regExpForLink).default('https://www.lifesavvy.com/p/uploads/2020/10/269d4e5a.jpg?height=200p&trim=2,2,2,2'),
-    email: Joi.string().trim().required().email(),
-    password: Joi.string().trim().required().min(8),
-  }),
-}), UserController.register);
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().trim().required().email(),
-    password: Joi.string().trim().required().min(8),
-  }),
-}), UserController.login);
+app.post('/signup', validationQuerySignup, UserController.register);
+app.post('/signin', validationQuerySignin, UserController.login);
 
-app.use(handleAuthUser);
+// app.use(handleAuthUser);
 
-app.use('/users', userRouter);
-app.use('/cards', cardRouter);
+app.use(appRouter);
 
 app.use(errors());
 

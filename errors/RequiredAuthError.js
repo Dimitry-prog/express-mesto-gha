@@ -1,8 +1,8 @@
-class RequiredAuth extends Error {
+class RequiredAuthError extends Error {
   constructor(message) {
     super(message);
     this.statusCode = 400;
   }
 }
 
-export default RequiredAuth;
+export default RequiredAuthError;

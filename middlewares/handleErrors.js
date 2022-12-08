@@ -1,16 +1,15 @@
-import ApiError from '../errors/ApiError.js';
-
 const handleErrors = (err, req, res, next) => {
-  if (err instanceof ApiError) {
-    res.status(err.statusCode).json(err.message);
-    return;
-  }
+  const { statusCode = 500, message } = err;
 
-  res.status(500).json('Server not response');
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'Oh, Server crashed'
+        : message,
+    });
 
-  // res.status(err.status || 500);
-  // res.send({ message: err.message || 'Server not response' });
-  //  next();
+  next();
 };
 
 export default handleErrors;

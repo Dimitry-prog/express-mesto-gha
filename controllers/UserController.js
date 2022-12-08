@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 import UserService from '../services/UserService.js';
 import NotFoundError from '../errors/NotFoundError .js';
-import BadRequest from '../errors/BadRequest.js';
-import RequiredAuth from '../errors/RequiredAuth.js';
-import ExistUser from '../errors/ExistUser.js';
+import BadRequestError from '../errors/BadRequestError.js';
+import RequiredAuthError from '../errors/RequiredAuthError.js';
+import ExistUserError from '../errors/ExistUserError.js';
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -22,13 +22,13 @@ class UserController {
       const user = await UserService.getSingle(req.params.userId);
 
       if (!user) {
-        throw new NotFoundError('User not found');
+        next(new NotFoundError('User not found'));
       }
 
       return res.json(user);
     } catch (e) {
       if (e.name === 'CastError') {
-        throw new BadRequest();
+        next(new BadRequestError());
       }
       next(e);
     }
@@ -44,13 +44,13 @@ class UserController {
       const updatedProfile = await UserService.updateProfile(req.user._id, profile);
 
       if (!updatedProfile) {
-        throw new NotFoundError('Profile not found');
+        next(new NotFoundError('Profile not found'));
       }
 
       return res.json(updatedProfile);
     } catch (e) {
       if (e.name === 'ValidationError') {
-        throw new BadRequest();
+        next(new BadRequestError());
       }
       next(e);
     }
@@ -62,13 +62,13 @@ class UserController {
         .updateAvatar(req.user._id, req.body.avatar).validate();
 
       if (!updatedUserAvatar) {
-        throw new NotFoundError('Avatar not found');
+        next(new NotFoundError('Avatar not found'));
       }
 
       return res.json(updatedUserAvatar);
     } catch (e) {
       if (e.name === 'ValidationError') {
-        throw new BadRequest();
+        next(new BadRequestError());
       }
       next(e);
     }
@@ -80,7 +80,7 @@ class UserController {
       const authUser = await UserService.findUserByCredentials(email, password);
 
       if (!authUser) {
-        throw new RequiredAuth('Authorization required');
+        next(new RequiredAuthError('Authorization required'));
       }
 
       const token = jwt.sign(
@@ -95,7 +95,7 @@ class UserController {
       });
     } catch (e) {
       if (e.name === 'ValidationError') {
-        throw new BadRequest();
+        next(new BadRequestError());
       }
       next(e);
     }
@@ -117,10 +117,10 @@ class UserController {
       return res.status(201).json(user);
     } catch (e) {
       if (e.name === 'ValidationError') {
-        throw new BadRequest();
+        next(new BadRequestError());
       }
       if (e.code === 11000) {
-        throw new ExistUser('You already registered, please login instead');
+        next(new ExistUserError('You already registered, please login instead'));
       }
       next(e);
     }
@@ -137,7 +137,7 @@ class UserController {
   //     return res.json(userInfo);
   //   } catch (e) {
   //     if (e.name === 'CastError') {
-  //       throw new BadRequest();
+  //       next(new BadRequestError());
   //     }
   //     next(e);
   //   }

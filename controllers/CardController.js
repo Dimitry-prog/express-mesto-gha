@@ -1,16 +1,16 @@
 import CardService from '../services/CardService.js';
-import ApiError from '../errors/ApiError.js';
-import BadRequest from '../errors/BadRequest.js';
+import BadRequestError from '../errors/BadRequestError.js';
+import NotFoundError from '../errors/NotFoundError .js';
 
 class CardController {
   static async create(req, res, next) {
     try {
-      const id = req.user._id;
-      const card = await CardService.create({ ...req.body, owner: id });
-      return res.json(card);
+      const { name, link } = req.body;
+      const card = await CardService.create({ name, link });
+      return res.status(201).json(card);
     } catch (e) {
       if (e.name === 'ValidationError') {
-        throw new BadRequest();
+        next(new BadRequestError());
       }
       next(e);
     }
@@ -27,16 +27,19 @@ class CardController {
 
   static async removeCard(req, res, next) {
     try {
-      const cards = await CardService.removeCard(req.params.cardId);
+      let cards;
+      if (req.body.owner._id === req.user._id) {
+        cards = await CardService.removeCard(req.params.cardId);
+      }
 
       if (!cards) {
-        return ApiError.notFound('Card not found');
+        next(new NotFoundError('Card not found'));
       }
 
       return res.json(cards);
     } catch (e) {
       if (e.name === 'CastError') {
-        throw new BadRequest();
+        next(new BadRequestError());
       }
       next(e);
     }
@@ -48,13 +51,13 @@ class CardController {
         .like(req.params.cardId, req.user._id);
 
       if (!like) {
-        return ApiError.notFound('Card like not found');
+        next(new NotFoundError('Card like not found'));
       }
 
       return res.json(like);
     } catch (e) {
       if (e.name === 'CastError') {
-        throw new BadRequest();
+        next(new BadRequestError());
       }
       next(e);
     }
@@ -66,13 +69,13 @@ class CardController {
         .dislike(req.params.cardId, req.user._id);
 
       if (!dislike) {
-        return ApiError.notFound('Card dislake not found');
+        next(new NotFoundError('Card dislake not found'));
       }
 
       return res.json(dislike);
     } catch (e) {
       if (e.name === 'CastError') {
-        throw new BadRequest();
+        next(new BadRequestError());
       }
       next(e);
     }
