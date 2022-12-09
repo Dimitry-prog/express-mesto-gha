@@ -1,6 +1,5 @@
 {
   "env": {
-    "browser": true,
     "es2021": true
   },
   "extends": "airbnb-base",
@@ -18,19 +17,6 @@
           "_id"
         ]
       }
-    ],
-    "class-methods-use-this": [
-      "error",
-      {
-        "enforceForClassFields": false
-      }
-    ],
-    "import/extensions": [
-      0,
-      {
-        "js": "always"
-      }
-    ],
-    "no-useless-escape": "off"
+    ]
   }
 }

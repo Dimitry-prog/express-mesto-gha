@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 import { regExpForEmail, regExpForLink } from '../utils/constants.js';
+import RequiredAuthError from '../errors/RequiredAuthError.js';
 
 const userModel = new mongoose.Schema({
   name: {
@@ -42,5 +44,17 @@ const userModel = new mongoose.Schema({
     select: false,
   },
 });
+
+userModel.statics.findUserByCredentials = async function (email, password) {
+  const findUser = await this.findOne({ email }).select('+password');
+  if (!findUser) {
+    throw new RequiredAuthError('Authorization required');
+  }
+  const checkPassword = await bcrypt.compare(password, findUser.password);
+  if (!checkPassword) {
+    throw new RequiredAuthError('Authorization required');
+  }
+  return findUser;
+};
 
 export default mongoose.model('userModel', userModel);
