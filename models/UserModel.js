@@ -1,18 +1,18 @@
 import mongoose from 'mongoose';
-import { regExpForLink } from '../utils/constants.js';
+import { regExpForEmail, regExpForLink } from '../utils/constants.js';
 
 const userModel = new mongoose.Schema({
   name: {
     type: String,
     minLength: 2,
     maxLength: 30,
-    default: 'Dimitry',
+    default: 'Your name',
   },
   about: {
     type: String,
     minLength: 2,
     maxLength: 30,
-    default: 'frontend',
+    default: 'Your activity',
   },
   avatar: {
     type: String,
@@ -29,6 +29,12 @@ const userModel = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
+    validate: {
+      validator(v) {
+        return regExpForEmail.test(v);
+      },
+      message: (props) => `${props.value} is not valid email address!`,
+    },
   },
   password: {
     type: String,

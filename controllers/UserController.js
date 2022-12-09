@@ -34,6 +34,15 @@ export const getSingleUser = async (req, res, next) => {
   }
 };
 
+const updateProfileById = async (model, id, profile) => {
+  const updatedProfile = await model
+    .findByIdAndUpdate(id, profile, {
+      new: true,
+      runValidators: true,
+    });
+  return updatedProfile;
+};
+
 export const updateUserProfile = async (req, res, next) => {
   try {
     const { name, about } = req.body;
@@ -41,11 +50,7 @@ export const updateUserProfile = async (req, res, next) => {
       name,
       about,
     };
-    const updatedProfile = await UserModel
-      .findByIdAndUpdate(req.user._id, profile, {
-        new: true,
-        runValidators: true,
-      });
+    const updatedProfile = await updateProfileById(UserModel, req.user._id, profile);
 
     if (!updatedProfile) {
       next(new NotFoundError('Profile not found'));
@@ -63,15 +68,13 @@ export const updateUserProfile = async (req, res, next) => {
 export const updateUserAvatar = async (req, res, next) => {
   try {
     const { avatar } = req.body;
-
-    const updatedProfile = await UserModel
-      .findByIdAndUpdate(req.user._id, { avatar }, {
-        new: true,
-        runValidators: true,
-      });
+    const profile = {
+      avatar,
+    };
+    const updatedProfile = await updateProfileById(UserModel, req.user._id, profile);
 
     if (!updatedProfile) {
-      next(new NotFoundError('Profile not found'));
+      next(new NotFoundError('Avatar not found'));
     }
 
     return res.json(updatedProfile);
@@ -112,10 +115,10 @@ export const loginUser = async (req, res, next) => {
       { expiresIn: '7d' },
     );
 
-    return res.cookie('jwt', token, {
+    res.cookie('jwt', token, {
       maxAge: 3600000,
       httpOnly: true,
-    });
+    }).send({ message: 'Authentication successful' });
   } catch (e) {
     if (e.name === 'ValidationError') {
       next(new BadRequestError());
@@ -137,7 +140,10 @@ export const registerUser = async (req, res, next) => {
       email,
       password: hash,
     });
-    return res.status(201).json(user);
+    return res.status(201).json({
+      ...user,
+      _id: user._id,
+    });
   } catch (e) {
     if (e.name === 'ValidationError') {
       next(new BadRequestError());

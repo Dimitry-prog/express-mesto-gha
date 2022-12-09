@@ -4,11 +4,12 @@ import { errors } from 'celebrate';
 import * as dotenv from 'dotenv';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import escape from 'escape-html';
 import { loginUser, registerUser } from './controllers/UserController.js';
 import handleErrors from './middlewares/handleErrors.js';
 import { limiter } from './utils/constants.js';
 import appRouter from './routes/index.js';
-import { validationQuerySignin, validationQuerySignup } from './helpers/validationQuery.js';
+import { validationQuerySignin, validationQuerySignup } from './helpers/validationCelebrate.js';
 import handleAuthUser from './middlewares/handleAuthUser.js';
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(helmet());
 app.use(limiter);
 app.use(cookieParser());
 app.use(express.json());
+app.use(escape);
 
 app.post('/signup', validationQuerySignup, registerUser);
 app.post('/signin', validationQuerySignin, loginUser);
