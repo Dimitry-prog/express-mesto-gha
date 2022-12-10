@@ -52,8 +52,7 @@ export const registerUser = async (req, res, next) => {
       next(new BadRequestError());
     } else if (e.code === 11000) {
       next(new ExistUserError('You already registered, please login instead'));
-    } else {
-      next(e);
     }
+    return next(e);
   }
 };

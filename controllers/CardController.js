@@ -12,9 +12,8 @@ export const createCard = async (req, res, next) => {
   } catch (e) {
     if (e.name === 'ValidationError') {
       next(new BadRequestError());
-    } else {
-      next(e);
     }
+    return next(e);
   }
 };
 
@@ -23,7 +22,7 @@ export const getCards = async (req, res, next) => {
     const cards = await CardModel.find().populate(['owner', 'likes']);
     return res.json(cards);
   } catch (e) {
-    next(e);
+    return next(e);
   }
 };
 
@@ -44,9 +43,8 @@ export const deleteCard = async (req, res, next) => {
   } catch (e) {
     if (e.name === 'CastError') {
       next(new BadRequestError());
-    } else {
-      next(e);
     }
+    return next(e);
   }
 };
 
@@ -66,9 +64,8 @@ const updateStatusCard = async (id, options, next) => {
   } catch (e) {
     if (e.name === 'CastError') {
       next(new BadRequestError());
-    } else {
-      next(e);
     }
+    return next(e);
   }
 };
 

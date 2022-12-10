@@ -8,10 +8,11 @@ export const getUsers = async (req, res, next) => {
     const users = await UserModel.find();
     return res.json(users);
   } catch (e) {
-    // don't work short record catch(next);
+    // Привет, на catch(next); почему-то линтер ругается
     // подскажите, пожалуйста, как надо было использовать
     // services в правильном ключе?
-    next(e);
+    // telegram https://t.me/Dmitry_Myt для связи, спасибо =)
+    return next(e);
   }
 };
 
@@ -30,9 +31,8 @@ const getUserById = async (id, next) => {
   } catch (e) {
     if (e.name === 'CastError') {
       next(new BadRequestError());
-    } else {
-      next(e);
     }
+    return next(e);
   }
 };
 
@@ -65,9 +65,8 @@ const updateProfileById = async (id, data, next) => {
   } catch (e) {
     if (e.name === 'ValidationError') {
       next(new BadRequestError());
-    } else {
-      next(e);
     }
+    return next(e);
   }
 };
 

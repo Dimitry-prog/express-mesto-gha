@@ -4,9 +4,9 @@ import { errors } from 'celebrate';
 import * as dotenv from 'dotenv';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import handleErrors from './middlewares/handleErrors.js';
 import { limiter } from './utils/constants.js';
 import appRouter from './routes/index.js';
+import handleErrors from './middlewares/handleErrors.js';
 
 dotenv.config();
 
