@@ -4,14 +4,14 @@ import RequiredAuthError from '../errors/RequiredAuthError.js';
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const handleAuthUser = (req, res, next) => {
-  const { cookie } = req.headers;
+  const { authorization } = req.headers;
 
-  if (!cookie || !cookie.startsWith('jwt=')) {
+  if (!authorization || !authorization.startsWith('Bearer ')) {
     next(new RequiredAuthError('Authorization required'));
     return;
   }
 
-  const token = cookie.replace('jwt=', '');
+  const token = authorization.replace('Bearer ', '');
   let payload;
 
   try {
