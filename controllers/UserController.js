@@ -16,7 +16,7 @@ export const getUsers = async (req, res, next) => {
   }
 };
 
-const getUserById = async (id, res, next) => {
+const getUserById = async (id, next) => {
   try {
     const user = await UserModel.findById(id);
 
@@ -27,7 +27,7 @@ const getUserById = async (id, res, next) => {
       next(new NotFoundError('User not found'));
     }
 
-    return res.json(user);
+    return user;
   } catch (e) {
     if (e.name === 'CastError') {
       next(new BadRequestError());
@@ -37,13 +37,13 @@ const getUserById = async (id, res, next) => {
 };
 
 export const getSingleUser = async (req, res, next) => {
-  const user = await getUserById(req.params.userId, res, next);
-  return user;
+  const user = await getUserById(req.params.userId, next);
+  return res.json(user);
 };
 
 export const getUserInfo = async (req, res, next) => {
-  const user = await getUserById(req.user._id, res, next);
-  return user;
+  const user = await getUserById(req.user._id, next);
+  return res.json(user);
 };
 
 const updateProfileById = async (id, data, next) => {
