@@ -48,7 +48,7 @@ export const validationCard = celebrate({
 });
 
 export const validationGetUser = celebrate({
-  query: Joi.object().keys({
+  params: Joi.object().keys({
     userId: Joi.string().hex().length(24).required(),
   }),
 });

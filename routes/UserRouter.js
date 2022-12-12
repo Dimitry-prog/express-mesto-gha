@@ -11,7 +11,7 @@ import { validationAvatar, validationGetUser, validationProfile } from '../helpe
 const router = new Router();
 
 router.get('/', getUsers);
-router.get('/me', validationGetUser, getUserInfo);
+router.get('/me', getUserInfo);
 router.get('/:userId', validationGetUser, getSingleUser);
 router.patch('/me', validationProfile, updateUserProfile);
 router.patch('/me/avatar', validationAvatar, updateUserAvatar);

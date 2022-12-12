@@ -33,7 +33,7 @@ export const deleteCard = async (req, res, next) => {
     if (!card) {
       return next(new NotFoundError('Card not found'));
     }
-    if (card.owner._id !== req.user._id) {
+    if (String(card.owner._id) !== req.user._id) {
       return next(new ForbiddenError('You don\'t have permission for delete this card'));
     }
 
