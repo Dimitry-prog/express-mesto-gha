@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { regExpForEmail, regExpForLink } from '../utils/constants.js';
+import validator from 'validator';
+import { regExpForLink } from '../utils/constants.js';
 import RequiredAuthError from '../errors/RequiredAuthError.js';
 
 const userModel = new mongoose.Schema({
@@ -33,7 +34,7 @@ const userModel = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return regExpForEmail.test(v);
+        return validator.isEmail(v);
       },
       message: (props) => `${props.value} is not valid email address!`,
     },
