@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
 import BadRequestError from '../errors/BadRequestError.js';
 import NotFoundError from '../errors/NotFoundError .js';
 import CardModel from '../models/CardModel.js';
 import { httpStatusCode } from '../utils/constants.js';
+import ForbiddenError from '../errors/ForbiddenError.js';
 
 export const createCard = async (req, res, next) => {
   try {
@@ -31,12 +31,13 @@ export const deleteCard = async (req, res, next) => {
     const card = await CardModel.findById(req.params.cardId);
 
     if (!card) {
-      next(new NotFoundError('Card not found'));
+      return next(new NotFoundError('Card not found'));
     }
-    if (card.owner._id === req.user._id) {
-      await card.remove();
+    if (card.owner._id !== req.user._id) {
+      return next(new ForbiddenError('You don\'t have permission for delete this card'));
     }
 
+    await card.remove();
     return res.json({
       message: 'Card has been deleted',
     });
@@ -50,17 +51,14 @@ export const deleteCard = async (req, res, next) => {
 
 const updateStatusCard = async (id, options, next) => {
   try {
-    const status = await CardModel
+    const card = await CardModel
       .findByIdAndUpdate(id, options, { new: true })
       .populate(['likes']);
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      next(new BadRequestError());
+    if (!card) {
+      return next(new NotFoundError('Card not found'));
     }
-    if (!status) {
-      next(new NotFoundError('Card not found'));
-    }
-    return status;
+    return card;
   } catch (e) {
     if (e.name === 'CastError') {
       next(new BadRequestError());

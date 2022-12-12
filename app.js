@@ -11,7 +11,6 @@ import handleErrors from './middlewares/handleErrors.js';
 dotenv.config();
 
 const PORT = 3000;
-// const DB_URL = 'mongodb+srv://user:user@cluster0.deipiap.mongodb.net/?retryWrites=true&w=majority';
 const DB_URL = 'mongodb://localhost:27017/mestodb';
 const app = express();
 
