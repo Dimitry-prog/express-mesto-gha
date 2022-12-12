@@ -38,7 +38,7 @@ export const deleteCard = async (req, res, next) => {
     }
 
     await card.remove();
-    return res.json({
+    return res.status(httpStatusCode.ok).json({
       message: 'Card has been deleted',
     });
   } catch (e) {

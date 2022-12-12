@@ -9,5 +9,5 @@ export const limiter = rateLimit({
 
 export const httpStatusCode = {
   created: 201,
-
+  ok: 200,
 };
