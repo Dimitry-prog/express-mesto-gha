@@ -67,29 +67,13 @@ const updateStatusCard = async (id, options, next) => {
 };
 
 export const likeCard = async (req, res, next) => {
-  const cardLike = await updateStatusCard(req.params.cardId, { $addToSet: { likes: req.user._id } }, next);
+  const cardLike = await
+  updateStatusCard(req.params.cardId, { $addToSet: { likes: req.user._id } }, next);
   return res.json(cardLike);
 };
 
 export const dislikeCard = async (req, res, next) => {
-  const cardDislike = await updateStatusCard(req.params.cardId, { $pull: { likes: req.user._id } }, next);
+  const cardDislike = await
+  updateStatusCard(req.params.cardId, { $pull: { likes: req.user._id } }, next);
   return res.json(cardDislike);
 };
-
-// export const likeCard = async (req, res, next) => {
-//   try {
-//     const cardLike = await CardModel
-//       .findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-//       .populate(['likes']);
-//
-//     if (!cardLike) {
-//       return next(new NotFoundError('Card not found'));
-//     }
-//     return res.json(cardLike);
-//   } catch (e) {
-//     if (e.name === 'CastError') {
-//       return next(new BadRequestError());
-//     }
-//     return next(e);
-//   }
-// };
