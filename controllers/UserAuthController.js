@@ -18,12 +18,12 @@ export const loginUser = async (req, res, next) => {
       { expiresIn: '7d' },
     );
 
-    res.cookie('jwt', token, {
+    return res.cookie('jwt', token, {
       maxAge: 3600000,
       httpOnly: true,
     }).send({ message: 'Authentication successful' });
   } catch (e) {
-    next(e);
+    return next(e);
   }
 };
 
@@ -49,9 +49,10 @@ export const registerUser = async (req, res, next) => {
     });
   } catch (e) {
     if (e.name === 'ValidationError') {
-      next(new BadRequestError());
-    } else if (e.code === 11000) {
-      next(new ExistUserError('You already registered, please login instead'));
+      return next(new BadRequestError());
+    }
+    if (e.code === 11000) {
+      return next(new ExistUserError('You already registered, please login instead'));
     }
     return next(e);
   }

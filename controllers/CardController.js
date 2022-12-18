@@ -11,7 +11,7 @@ export const createCard = async (req, res, next) => {
     return res.status(httpStatusCode.created).json(card);
   } catch (e) {
     if (e.name === 'ValidationError') {
-      next(new BadRequestError());
+      return next(new BadRequestError());
     }
     return next(e);
   }
@@ -28,7 +28,7 @@ export const getCards = async (req, res, next) => {
 
 export const deleteCard = async (req, res, next) => {
   try {
-    const card = await CardModel.findById(req.params.cardId);
+    const card = await CardModel.findById(req.params.cardId).populate(['owner', 'likes']);
 
     if (!card) {
       return next(new NotFoundError('Card not found'));
@@ -42,25 +42,25 @@ export const deleteCard = async (req, res, next) => {
     return res.json(card);
   } catch (e) {
     if (e.name === 'CastError') {
-      next(new BadRequestError());
+      return next(new BadRequestError());
     }
     return next(e);
   }
 };
 
-const updateStatusCard = async (id, options, next) => {
+const updateStatusCard = async (id, options, res, next) => {
   try {
     const card = await CardModel
       .findByIdAndUpdate(id, options, { new: true })
-      .populate(['likes']);
+      .populate(['owner', 'likes']);
 
     if (!card) {
       return next(new NotFoundError('Card not found'));
     }
-    return card;
+    return res.json(card);
   } catch (e) {
     if (e.name === 'CastError') {
-      next(new BadRequestError());
+      return next(new BadRequestError());
     }
     return next(e);
   }
@@ -68,12 +68,12 @@ const updateStatusCard = async (id, options, next) => {
 
 export const likeCard = async (req, res, next) => {
   const cardLike = await
-  updateStatusCard(req.params.cardId, { $addToSet: { likes: req.user._id } }, next);
-  return res.json(cardLike);
+  updateStatusCard(req.params.cardId, { $addToSet: { likes: req.user._id } }, res, next);
+  return cardLike;
 };
 
 export const dislikeCard = async (req, res, next) => {
   const cardDislike = await
-  updateStatusCard(req.params.cardId, { $pull: { likes: req.user._id } }, next);
-  return res.json(cardDislike);
+  updateStatusCard(req.params.cardId, { $pull: { likes: req.user._id } }, res, next);
+  return cardDislike;
 };

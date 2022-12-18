@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import NotFoundError from '../errors/NotFoundError .js';
 import BadRequestError from '../errors/BadRequestError.js';
 import UserModel from '../models/UserModel.js';
@@ -12,7 +11,7 @@ export const getUsers = async (req, res, next) => {
   }
 };
 
-const getUserById = async (id, next) => {
+const getUserById = async (id, res, next) => {
   try {
     const user = await UserModel.findById(id);
 
@@ -20,26 +19,26 @@ const getUserById = async (id, next) => {
       return next(new NotFoundError('User not found'));
     }
 
-    return user;
+    return res.json(user);
   } catch (e) {
     if (e.name === 'CastError') {
-      next(new BadRequestError());
+      return next(new BadRequestError());
     }
     return next(e);
   }
 };
 
 export const getSingleUser = async (req, res, next) => {
-  const user = await getUserById(req.params.userId, next);
-  return res.json(user);
+  const user = await getUserById(req.params.userId, res, next);
+  return user;
 };
 
 export const getUserInfo = async (req, res, next) => {
-  const user = await getUserById(req.user._id, next);
-  return res.json(user);
+  const user = await getUserById(req.user._id, res, next);
+  return user;
 };
 
-const updateProfileById = async (id, data, next) => {
+const updateProfileById = async (id, data, res, next) => {
   try {
     const updatedProfile = await UserModel
       .findByIdAndUpdate(id, data, {
@@ -47,17 +46,14 @@ const updateProfileById = async (id, data, next) => {
         runValidators: true,
       });
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return next(new BadRequestError());
-    }
     if (!updatedProfile) {
       return next(new NotFoundError('Profile not found'));
     }
 
-    return updatedProfile;
+    return res.json(updatedProfile);
   } catch (e) {
     if (e.name === 'ValidationError') {
-      next(new BadRequestError());
+      return next(new BadRequestError());
     }
     return next(e);
   }
@@ -69,8 +65,8 @@ export const updateUserProfile = async (req, res, next) => {
     name,
     about,
   };
-  const updatedProfile = await updateProfileById(req.user._id, data, next);
-  return res.json(updatedProfile);
+  const updatedProfile = await updateProfileById(req.user._id, data, res, next);
+  return updatedProfile;
 };
 
 export const updateUserAvatar = async (req, res, next) => {
@@ -78,6 +74,6 @@ export const updateUserAvatar = async (req, res, next) => {
   const data = {
     avatar,
   };
-  const updatedProfile = await updateProfileById(req.user._id, data, next);
-  return res.json(updatedProfile);
+  const updatedProfile = await updateProfileById(req.user._id, data, res, next);
+  return updatedProfile;
 };
