@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import { limiter } from './utils/constants.js';
 import appRouter from './routes/index.js';
 import handleErrors from './middlewares/handleErrors.js';
+import { errorLogger, requestLogger } from './middlewares/logger.js';
 
 dotenv.config();
 
@@ -19,8 +20,11 @@ app.use(limiter);
 app.use(cookieParser());
 app.use(express.json());
 
+app.use(requestLogger);
+
 app.use(appRouter);
 
+app.use(errorLogger);
 app.use(errors());
 app.use(handleErrors);
 
@@ -28,7 +32,7 @@ const startApp = async () => {
   try {
     await mongoose.connect(DB_URL, {
       useUnifiedTopology: true,
-      useNewUrlParser: true,
+      // useNewUrlParser: true,
     });
     app.listen(PORT, () => console.log('SERVER WORK!!!'));
   } catch (e) {
