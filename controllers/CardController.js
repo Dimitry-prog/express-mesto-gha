@@ -66,14 +66,10 @@ const updateStatusCard = async (id, options, res, next) => {
   }
 };
 
-export const likeCard = async (req, res, next) => {
-  const cardLike = await
-  updateStatusCard(req.params.cardId, { $addToSet: { likes: req.user._id } }, res, next);
-  return cardLike;
-};
+export const likeCard = async (req, res, next) => (
+  updateStatusCard(req.params.cardId, { $addToSet: { likes: req.user._id } }, res, next)
+);
 
-export const dislikeCard = async (req, res, next) => {
-  const cardDislike = await
-  updateStatusCard(req.params.cardId, { $pull: { likes: req.user._id } }, res, next);
-  return cardDislike;
-};
+export const dislikeCard = async (req, res, next) => (
+  updateStatusCard(req.params.cardId, { $pull: { likes: req.user._id } }, res, next)
+);

@@ -28,29 +28,23 @@ const getUserById = async (id, res, next) => {
   }
 };
 
-export const getSingleUser = async (req, res, next) => {
-  const user = await getUserById(req.params.userId, res, next);
-  return user;
-};
+export const getSingleUser = async (req, res, next) => getUserById(req.params.userId, res, next);
 
-export const getUserInfo = async (req, res, next) => {
-  const user = await getUserById(req.user._id, res, next);
-  return user;
-};
+export const getUserInfo = async (req, res, next) => getUserById(req.user._id, res, next);
 
 const updateProfileById = async (id, data, res, next) => {
   try {
-    const updatedProfile = await UserModel
+    const user = await UserModel
       .findByIdAndUpdate(id, data, {
         new: true,
         runValidators: true,
       });
 
-    if (!updatedProfile) {
+    if (!user) {
       return next(new NotFoundError('Profile not found'));
     }
 
-    return res.json(updatedProfile);
+    return res.json(user);
   } catch (e) {
     if (e.name === 'ValidationError') {
       return next(new BadRequestError());
@@ -65,8 +59,7 @@ export const updateUserProfile = async (req, res, next) => {
     name,
     about,
   };
-  const updatedProfile = await updateProfileById(req.user._id, data, res, next);
-  return updatedProfile;
+  return updateProfileById(req.user._id, data, res, next);
 };
 
 export const updateUserAvatar = async (req, res, next) => {
@@ -74,6 +67,5 @@ export const updateUserAvatar = async (req, res, next) => {
   const data = {
     avatar,
   };
-  const updatedProfile = await updateProfileById(req.user._id, data, res, next);
-  return updatedProfile;
+  return updateProfileById(req.user._id, data, res, next);
 };
