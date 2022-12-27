@@ -11,3 +11,17 @@ export const httpStatusCode = {
   created: 201,
   ok: 200,
 };
+
+export const allowedCors = [
+  'http://sprint-15.nomoredomains.club',
+  'http://api.sprint-15.nomoredomains.club',
+  'https://sprint-15.nomoredomains.club',
+  'https://api.sprint-15.nomoredomains.club',
+  'localhost:3000',
+];
+
+export const corsOptions = {
+  origin: allowedCors,
+  optionsSuccessStatus: 200,
+  credentials: true,
+};

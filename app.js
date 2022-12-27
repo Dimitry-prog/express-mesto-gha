@@ -4,7 +4,8 @@ import { errors } from 'celebrate';
 import * as dotenv from 'dotenv';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import { limiter } from './utils/constants.js';
+import cors from 'cors';
+import { corsOptions, limiter } from './utils/constants.js';
 import appRouter from './routes/index.js';
 import handleErrors from './middlewares/handleErrors.js';
 import { errorLogger, requestLogger } from './middlewares/logger.js';
@@ -21,6 +22,8 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use(requestLogger);
+
+app.use(cors(corsOptions));
 
 app.use(appRouter);
 
